@@ -30,7 +30,7 @@ const Login = () => {
     if (!formData.email || !formData.password) {
       Toast.fire({
         icon: 'error',
-        title: 'Please fill in all fields'
+        title: 'All fields are required'
       });
       return;
     }
