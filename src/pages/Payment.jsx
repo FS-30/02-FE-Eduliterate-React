@@ -30,9 +30,6 @@ export default function Payment() {
     handleCloseModalPayment();
     setShowSubmitProofModal(true);
 
-    // Add logic here
-    // ..............
-
     localStorage.setItem("paymentSuccess", "true");
     setTimeout(() => {
       window.location.href = "../index.html#success";
