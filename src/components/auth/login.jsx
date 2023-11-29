@@ -1,8 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 import educationImage from '../assets/education.png';
 import './style.css';
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-right',
+  iconColor: 'white',
+  customClass: {
+    popup: 'colored-toast',
+    icon: 'colored-toast',
+    title: 'colored-toast',
+    htmlContainer: 'colored-toast'
+  },
+  showConfirmButton: false,
+  timer: 1500,
+  timerProgressBar: true
+});
+
 const Login = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.email || !formData.password) {
+      Toast.fire({
+        icon: 'error',
+        title: 'Please fill in all fields'
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch('https://eduliterate.cyclic.app/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        Toast.fire({
+          icon: 'success',
+          title: 'Login successful'
+        });
+      } else {
+        throw new Error('Login failed');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      Toast.fire({
+        icon: 'error',
+        title: 'Login failed'
+      });
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   return (
     <div className="card-container">
       <img className="element-removebg" src={educationImage} alt="Education" />
@@ -12,25 +75,43 @@ const Login = () => {
             <div className="text-wrapper">Welcome Back!</div>
             <p className="p-login">Please Log In to continue your learning journey with Eduliterate.</p>
 
-            <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <div className="box">
-                <div className="search">
-                  <input id="username" name="username" className="text-container" placeholder="Enter Your Username Here" type="text" />
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <div className="box">
+                  <div className="search">
+                    <input
+                      id="email"
+                      name="email"
+                      className="text-container"
+                      placeholder="Enter Your Email Here"
+                      type="text"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <div className="box">
-                <div className="search">
-                  <input id="password" name="password" className="text-container" placeholder="Enter Your Password" type="password" />
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <div className="box">
+                  <div className="search">
+                    <input
+                      id="password"
+                      name="password"
+                      className="text-container"
+                      placeholder="Enter Your Password"
+                      type="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <button className="submit-button login-button">Login</button>
+              <button type="submit" className="submit-button login-button">Login</button>
+            </form>
 
             <a href="register.html" className="dont-have-account-link">
               Don't Have Account? Sign Up

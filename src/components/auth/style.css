@@ -145,8 +145,22 @@ body {
     outline: none;
 }
 
-.submit-button, .login-button {
+.login-button {
     width: 73%;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background-color: #FFA458;
+    color: white;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.submit-button {
+    width: 100%;
     padding: 12px;
     border: none;
     border-radius: 12px;
