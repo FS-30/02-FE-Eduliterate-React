@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
-import educationImage from '../assets/education.png';
+import educationImage from '../../assets/education.png';
 import './style.css';
 
 const Toast = Swal.mixin({
