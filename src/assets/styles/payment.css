@@ -126,20 +126,6 @@ p {
   font-size: 15px;
 }
 
-.special-button {
-  font-family: "Poppins";
-  background-color: #ffa458;
-  border-radius: 35px;
-  margin-top: 10px;
-  padding: 2px 20px;
-  text-decoration: none;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 15px;
-  width: 120%;
-  text-align: center;
-}
-
 .nav-item {
   margin-right: 20px;
 }
@@ -303,14 +289,6 @@ p {
   .button-white {
     margin: 5px 10px;
     width: 90%;
-  }
-
-  #loggedInUsername {
-    display: none;
-  }
-
-  .special-button {
-    display: none;
   }
 
   .image-center {

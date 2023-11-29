@@ -1,10 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Link, useLocation } from "react-router-dom";
 
 import logoImg from "../assets/img/logo.png";
 
 const Navbar = () => {
+  const location = useLocation();
+
   return (
     <div id="sticky-navbar">
       <nav className="navbar navbar-expand-lg navbar-light bg-navbar px-4">
@@ -12,15 +13,18 @@ const Navbar = () => {
         <Link to="/" className="logo-text navbar-brand">
           EDULITERATE
         </Link>
-        <div className="navbar-collapse ms-4" id="navbarNav">
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse ms-4" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link to="/" className="nav-link navigation active">
+              <Link to="/" className={`nav-link navigation ${location.pathname === '/' ? 'active' : ''}`}>
                 HOME
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/digital-collection" className="nav-link navigation">
+              <Link to="/digital-collection" className={`nav-link navigation ${location.pathname === '/digital-collection' ? 'active' : ''}`}>
                 DIGITAL COLLECTION
               </Link>
             </li>
@@ -30,8 +34,7 @@ const Navbar = () => {
               <Link
                 to="/auth/register"
                 className="nav-link navigation"
-                id="registerButton"
-              >
+                id="registerButton">
                 Register
               </Link>
             </li>
@@ -39,8 +42,7 @@ const Navbar = () => {
               <Link
                 to="/auth/login"
                 className="nav-link navigation special-button"
-                id="loginButton"
-              >
+                id="loginButton">
                 Login
               </Link>
             </li>

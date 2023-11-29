@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Poppins");
 @import url("https://fonts.googleapis.com/css?family=Inter:400");
 
+
+
 h1 {
   font-size: 32px;
   font-weight: bold;
@@ -310,9 +312,9 @@ p {
     display: none;
   }
 
-  .special-button {
+  /* .special-button {
     display: none;
-  }
+  } */
 
   .image-center {
     width: 100%;
