@@ -9,7 +9,11 @@ export default function App() {
 
   return (
     <>
-      {location.pathname.includes('/book-details') ? '' : <Navbar />}
+      {
+        location.pathname.includes('/book-details') 
+        || location.pathname.includes('/payment')  
+        ? '' : <Navbar />
+      }
       <Router />
     </>
   );

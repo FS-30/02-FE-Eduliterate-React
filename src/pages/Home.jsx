@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from 'react-helmet-async';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Footer from "../components/Footer";
@@ -12,6 +13,10 @@ import ficon3 from "../assets/img/ficon3.png";
 const HomePage = () => {
   return (
     <>
+      <Helmet>
+        <title>Eduliterate</title>
+        <link rel="icon" href="src/assets/img/logo.png" />
+      </Helmet>
       <div className="container">
         <div className="row">
           <div className="col text-center">

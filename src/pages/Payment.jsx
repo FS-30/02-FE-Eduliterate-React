@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Collapse } from "react-bootstrap";
+import { Helmet } from 'react-helmet-async';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
@@ -29,6 +30,9 @@ export default function Payment() {
   function handleSubmitProof() {
     handleCloseModalPayment();
     setShowSubmitProofModal(true);
+
+    // Add logic here
+    // ..............
 
     localStorage.setItem("paymentSuccess", "true");
     setTimeout(() => {
@@ -63,6 +67,10 @@ export default function Payment() {
 
   return (
     <div>
+      <Helmet>
+        <title>Payment</title>
+        <link rel="icon" href="src/assets/img/Wallet.png" />
+      </Helmet>
       <div className="content container-fluid custom-padding">
         <div className="row mb-5">
           <div className="col" style={{paddingTop: "50px"}}>
