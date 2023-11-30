@@ -1,0 +1,411 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins");
+@import url("https://fonts.googleapis.com/css?family=Inter:400");
+
+h1 {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+#sticky-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.logo {
+  max-width: 50px;
+}
+
+.logo-text {
+  font-weight: bold;
+  color: #ffa458 !important;
+  padding-right: 40px;
+}
+
+.container,
+.animate {
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 0.6s;
+}
+
+.social-media {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.social-media:hover {
+  color: #000000;
+}
+
+.social-media-container {
+  display: flex;
+  align-items: center;
+}
+
+.social-media-container box-icon {
+  margin-right: 5px;
+}
+
+.sub-heading {
+  margin-bottom: 200px;
+}
+
+.heading2 {
+  margin-bottom: 40px;
+}
+
+.heading3 {
+  margin-top: 150px;
+}
+
+p {
+  font-family: "Inter-Regular", Helvetica;
+  font-size: 16px;
+  color: #717171;
+}
+
+.button-orange {
+  background-color: #ffa458;
+  border-radius: 50px;
+  padding: 2px 20px;
+  width: 250px;
+  height: 30px;
+  border: 0;
+  font-weight: bold;
+  margin: 0 10px;
+}
+
+.button-orange:hover {
+  background-color: #ef7919;
+}
+
+.button-white {
+  background-color: #ffffff;
+  border-radius: 50px;
+  padding: 2px 20px;
+  min-width: 100px;
+  border: 0;
+  font-weight: bold;
+  margin: 0 10px;
+}
+
+.btn-bayar {
+  margin-top: 100px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-bayar:hover {
+  background-color: #ef7919;
+}
+
+.btn-bayar:active {
+  background-color: #d45a00;
+}
+
+.btn-bayar-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.navigation {
+  font-family: "Poppins";
+  color: #000000;
+  font-weight: bold;
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+.navigation-section {
+  font-family: "Poppins";
+  color: #000000;
+  font-weight: lighter;
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+.nav-item {
+  margin-right: 20px;
+}
+
+.login {
+  font-family: "Poppins";
+  background-color: #ffa458;
+  border-radius: 35px;
+  padding: 8px 20px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.login:hover {
+  color: white;
+}
+
+.register {
+  font-family: "Poppins";
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.register:hover,
+.navigation:hover {
+  color: #ef7919;
+}
+
+.active {
+  color: #ffa458 !important;
+}
+
+.left-section {
+  padding-right: 100px;
+}
+
+.image-center {
+  width: 35%;
+  padding-top: 80px;
+  padding-bottom: 50px;
+}
+
+.img-fullscreen {
+  height: 125%;
+  margin-top: -80px;
+}
+
+.img-ficon {
+  height: 70px;
+}
+
+.bg-payment {
+  width: 100%;
+}
+
+.bg-payment-container {
+  position: relative;
+}
+
+.bg-payment-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-size: 20px;
+  font-weight: light;
+  text-align: center;
+}
+
+.bg-payment-text box-icon {
+  display: block;
+  margin: 10px auto 0;
+}
+
+.bg-navbar {
+  background-color: #f9fbfd;
+  border-bottom: 1px solid #d1d9e2;
+}
+
+.bg-img-pill {
+  background-color: #dfdfdf;
+}
+
+.bg-orange {
+  background-color: #ffa458;
+  border: none;
+}
+
+.img-pill {
+  background-color: white;
+}
+
+.img-pill:hover {
+  background-color: rgb(247, 247, 247);
+  cursor: pointer;
+}
+
+.img-pill > img {
+  height: 30px;
+}
+
+.bottom-section {
+  background-image: url("../../../homepage/assets/img/bg-bottoms.png");
+  background-size: cover;
+  background-position: center;
+  margin-top: 200px;
+}
+
+.footer {
+  background-color: #ffa458;
+  color: white;
+}
+
+.full-width-bg {
+  background-image: url("../../../homepage/assets/img/librarys.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  padding: 50px;
+  margin-left: -120px;
+  margin-right: -110px;
+}
+
+.content {
+  flex: 1;
+}
+
+.custom-padding {
+  padding: 50px;
+}
+
+.transparent-background {
+  background-color: transparent !important;
+  border: none;
+}
+
+.qr-code {
+  width: 10%;
+  display: block;
+  margin: 0 auto;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 990px) {
+  .button-orange,
+  .button-white {
+    margin: 5px 10px;
+    width: 90%;
+  }
+
+  .image-center {
+    width: 100%;
+  }
+
+  .left-section {
+    padding-right: 0;
+  }
+
+  .bg-custom-secondary {
+    width: 80%;
+    margin-left: 45px;
+  }
+
+  .bg-custom-secondary img {
+    display: none;
+  }
+
+  .bg-custom-secondary .left-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .bg-navbar {
+    background-color: #f9fbfd;
+  }
+
+  .bg-payment-text p,
+  h2 {
+    font-size: 12px;
+  }
+
+  .qr-code {
+    width: 30%;
+  }
+
+  .img-fullscreen {
+    display: none;
+  }
+
+  .img-ficon {
+    height: 40px;
+  }
+
+  .custom-padding {
+    padding: 10px;
+  }
+
+  .content {
+    flex: 1;
+  }
+
+  .login {
+    background-color: transparent;
+    padding: 0px;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    align-items: center;
+    margin-top: -5px;
+  }
+
+  .navbar-nav .nav-item {
+    margin: 10px 10px 0 0;
+  }
+
+  .footer .col.text-left.text-white {
+    text-align: center;
+  }
+
+  .img-fluid {
+    display: none;
+  }
+
+  .img-bank {
+    width: 50%;
+  }
+
+  .btn-light:hover {
+    color: #ffa458;
+  }
+
+  .mb-5 {
+    text-align: center;
+  }
+
+  .social-media-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .full-width-bg {
+    width: 135.8%;
+  }
+
+  .left-section {
+    text-align: end;
+    margin-left: 50px;
+  }
+
+  .bank-details {
+    font-size: 10px;
+  }
+}
+
+.custom-collapse {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out; /* Adjust the transition duration as needed */
+}
+
+.custom-collapse.open {
+  max-height: 1000px; /* Set an appropriate max height */
+}

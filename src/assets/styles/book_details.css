@@ -1,0 +1,105 @@
+.body-book-details {
+    font-family: 'Poppins', sans-serif;
+    background-image: url('https://c.animaapp.com/ME8XcaOo/img/2111-w039-n003-6b-p1-1.png');
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+    animation-delay: 0.6s;
+    text-align: center;
+    padding: 20px;
+}
+
+.book-details-container {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.book-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.book-image {
+    flex: 1;
+    padding: 20px;
+}
+
+.book-image img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.book-info {
+    flex: 2;
+    text-align: left;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+}
+
+p {
+    font-size: 16px;
+    color: #666;
+    margin: 5px 0;
+}
+
+.go-back-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #FFA458;
+    font-weight: bold;
+}
+
+.go-back-link:hover {
+    color: #EF7919;
+}
+
+.button-container-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    height: 100%;
+}
+
+.speak-button {
+    padding: 10px 20px;
+    background-color: #FFA458;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.speak-button:hover {
+    background-color: #EF7919;
+}
+
+.speak-button box-icon {
+    vertical-align: middle;
+    margin-bottom: 2px;
+}
+
+/* Fade IN */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
