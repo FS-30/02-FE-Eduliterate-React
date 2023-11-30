@@ -50,6 +50,9 @@ const Login = () => {
           icon: 'success',
           title: 'Login successful'
         });
+
+        localStorage.setItem('token', data.token);
+        
       } else {
         throw new Error('Login failed');
       }
