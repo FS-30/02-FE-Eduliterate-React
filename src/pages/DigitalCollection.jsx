@@ -80,27 +80,26 @@ const DigitalCollection = () => {
   };
 
   useEffect(() => {
-    // Fetch books data
     const fetchData = async () => {
       try {
-        const response = await fetch("src/assets/data/books.json");
-        console.log(response)
+        const response = await fetch('https://eduliterate.cyclic.app/data/books');
+        if (!response.ok) {
+          throw new Error('Failed to fetch books');
+        }
         const data = await response.json();
-        setBooks(data.books);
-        console.log(data);
+        setBooks(data); 
       } catch (error) {
-        console.error("Error loading book data:", error);
+        console.error('Error loading book data:', error);
       }
     };
-
+  
     fetchData();
-
-    // Get paymentSuccess from localStorage
+  
     const storedPaymentSuccess = localStorage.getItem('paymentSuccess');
     if (storedPaymentSuccess) {
       setPaymentSuccess(storedPaymentSuccess);
     }
-  }, []);
+  }, []);  
 
   return (
     <div className="books-body">

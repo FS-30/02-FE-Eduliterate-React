@@ -22,46 +22,64 @@ export default function Payment() {
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showSubmitProofModal, setShowSubmitProofModal] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const handleCloseModalPayment = () => setShowModal(false);
   const handleShowModalPayment = () => setShowModal(true);
   const handleCloseSubmitProofModal = () => setShowSubmitProofModal(false);
 
-  function handleSubmitProof() {
-    handleCloseModalPayment();
-    setShowSubmitProofModal(true);
-
-    // Add logic here
-    // ..............
-
-    localStorage.setItem("paymentSuccess", "true");
-    setTimeout(() => {
-      window.location.href = "../index.html#success";
-    }, 3000);
-  }
-
   const handleProofUploadChange = (e) => {
     const file = e.target.files[0];
 
     if (file) {
+      setImageFile(file);
+
       const reader = new FileReader();
 
       reader.onload = function (event) {
-        setPreviewImage(
-          <img
-            src={event.target.result}
-            alt="Preview"
-            className="img-bank"
-            style={{ maxWidth: "100px" }}
-          />,
-        );
+        setPreviewImage(event.target.result);
       };
 
       reader.readAsDataURL(file);
       setIsSubmitButtonDisabled(false);
     } else {
-      setPreviewImage("");
+      setImageFile(null);
       setIsSubmitButtonDisabled(true);
+      setPreviewImage(null);
+    }
+  };
+
+  const handleSubmitProof = async () => {
+    handleCloseModalPayment();
+
+    const token = localStorage.getItem('token');
+
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    try {
+      const response = await fetch('https://eduliterate.cyclic.app/data/payment/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setShowSubmitProofModal(true);
+
+        localStorage.setItem("paymentSuccess", "true");
+        setTimeout(() => {
+          window.location.href = "../index.html#success";
+        }, 3000);
+      } else {
+        throw new Error('Image upload failed');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
     }
   };
 
@@ -242,7 +260,16 @@ export default function Payment() {
               id="proofUpload"
               onChange={handleProofUploadChange}
             />
-            <div id="preview" style={{ marginTop: "20px" }}></div>
+            <div id="preview" style={{ marginTop: "20px" }}>
+              {previewImage && (
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="img-preview"
+                  style={{ maxWidth: "100px" }}
+                />
+              )}
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <button
