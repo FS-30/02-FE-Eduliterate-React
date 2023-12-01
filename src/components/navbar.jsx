@@ -78,7 +78,7 @@ const Navbar = () => {
                 >
                   <span
                     className="nav-link navigation-section"
-                    id="loggedInUsername"
+                    id="loggedInUsername" 
                   ></span>
                 </li>
               </>
