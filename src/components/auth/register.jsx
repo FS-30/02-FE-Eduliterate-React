@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import educationImage from '../../assets/img/education.png';
-import './style.css';
+import { Helmet } from 'react-helmet-async'; 
+import './authstyle.css';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -60,6 +61,10 @@ const Register = () => {
           icon: 'success',
           title: data.message
         });
+
+        setTimeout(() => {
+          window.location.href = '/auth/login';
+        }, 3000);
       } else {
         throw new Error('Registration failed');
       }
@@ -77,89 +82,95 @@ const Register = () => {
   };
 
   return (
-    <div className="card-container">
-      <img className="element-removebg" src={educationImage} alt="Education" />
-      <div className="low-fi-block-header">
-        <div className="div">
+    <div className="register-page">
+      <Helmet>
+          <title>Register</title>
+          <link rel="icon" href="../../src/assets/img/icon.png" />
+      </Helmet>
+      <div className="card-container">
+        <img className="element-removebg" src={educationImage} alt="Education" />
+        <div className="low-fi-block-header">
           <div className="div">
-            <div className="text-wrapper">Create A New Account</div>
-            <p className="p-register">Let's set up your account</p>
+            <div className="div">
+              <div className="text-wrapper">Create A New Account</div>
+              <p className="p-register">Let's set up your account</p>
 
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="username">Username</label>
-                <div className="box">
-                  <div className="search">
-                    <input
-                      id="username"
-                      name="username"
-                      className="text-container"
-                      placeholder="Enter Your Username Here"
-                      type="text"
-                      value={formData.username}
-                      onChange={handleChange}
-                    />
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="username">Username</label>
+                  <div className="box">
+                    <div className="search">
+                      <input
+                        id="username"
+                        name="username"
+                        className="text-container"
+                        placeholder="Enter Your Username Here"
+                        type="text"
+                        value={formData.username}
+                        onChange={handleChange}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <div className="box">
-                  <div className="search">
-                    <input
-                      id="email"
-                      name="email"
-                      className="text-container"
-                      placeholder="Enter Your Email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                    />
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <div className="box">
+                    <div className="search">
+                      <input
+                        id="email"
+                        name="email"
+                        className="text-container"
+                        placeholder="Enter Your Email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <div className="box">
-                  <div className="search">
-                    <input
-                      id="password"
-                      name="password"
-                      className="text-container"
-                      placeholder="Enter Your Password"
-                      type="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                    />
+                <div className="form-group">
+                  <label htmlFor="password">Password</label>
+                  <div className="box">
+                    <div className="search">
+                      <input
+                        id="password"
+                        name="password"
+                        className="text-container"
+                        placeholder="Enter Your Password"
+                        type="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="form-group">
-                <label htmlFor="confirmPassword">Confirm Password</label>
-                <div className="box">
-                  <div className="search">
-                    <input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      className="text-container"
-                      placeholder="Confirm Your Password"
-                      type="password"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                    />
+                <div className="form-group">
+                  <label htmlFor="confirmPassword">Confirm Password</label>
+                  <div className="box">
+                    <div className="search">
+                      <input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        className="text-container"
+                        placeholder="Confirm Your Password"
+                        type="password"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <button type="submit" className="submit-button">Register</button>
-            </form>
+                <button type="submit" className="submit-button">Register</button>
+              </form>
 
-            <a href="login.html" className="have-account-link">
-              Already Have an Account?
-            </a>
+              <a href="/auth/login" className="have-account-link">
+                Already Have an Account?
+              </a>
+            </div>
           </div>
         </div>
       </div>

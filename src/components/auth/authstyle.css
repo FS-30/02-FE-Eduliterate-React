@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Inter:400');
 
-body {
+.login-page,
+.register-page {
     background-color: #ffa458bf;
     font-family: "Inter-Regular", Helvetica;
     display: flex;

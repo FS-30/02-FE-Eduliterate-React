@@ -6,12 +6,14 @@ import "../src/assets/styles/style.css";
 
 export default function App() {
   const location = useLocation();
-
+  
   return (
     <>
       {
-        location.pathname.includes('/book-details') 
-        || location.pathname.includes('/payment')  
+        location.pathname === '/auth/login' || 
+        location.pathname === '/auth/register' ||
+        location.pathname.includes('/book-details') ||
+        location.pathname.includes('/payment') 
         ? '' : <Navbar />
       }
       <Router />

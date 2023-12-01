@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import educationImage from '../../assets/img/education.png';
-import './style.css';
+import { Helmet } from 'react-helmet-async'; 
+import './authstyle.css';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -52,6 +53,13 @@ const Login = () => {
         });
 
         localStorage.setItem('token', data.token);
+        localStorage.setItem('is_subscribed', data.is_subscribed);
+        localStorage.setItem('id', data.id);
+        localStorage.setItem('isloggedin', true);
+
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 3000);
         
       } else {
         throw new Error('Login failed');
@@ -70,55 +78,61 @@ const Login = () => {
   };
 
   return (
-    <div className="card-container">
-      <img className="element-removebg" src={educationImage} alt="Education" />
-      <div className="low-fi-block-header">
-        <div className="div">
+    <div className="login-page">
+      <Helmet>
+          <title>Login</title>
+          <link rel="icon" href="../../src/assets/img/icon.png" />
+      </Helmet>
+      <div className="card-container">
+        <img className="element-removebg" src={educationImage} alt="Education" />
+        <div className="low-fi-block-header">
           <div className="div">
-            <div className="text-wrapper">Welcome Back!</div>
-            <p className="p-login">Please Log In to continue your learning journey with Eduliterate.</p>
+            <div className="div">
+              <div className="text-wrapper">Welcome Back!</div>
+              <p className="p-login">Please Log In to continue your learning journey with Eduliterate.</p>
 
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <div className="box">
-                  <div className="search">
-                    <input
-                      id="email"
-                      name="email"
-                      className="text-container"
-                      placeholder="Enter Your Email Here"
-                      type="text"
-                      value={formData.email}
-                      onChange={handleChange}
-                    />
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <div className="box">
+                    <div className="search">
+                      <input
+                        id="email"
+                        name="email"
+                        className="text-container"
+                        placeholder="Enter Your Email Here"
+                        type="text"
+                        value={formData.email}
+                        onChange={handleChange}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <div className="box">
-                  <div className="search">
-                    <input
-                      id="password"
-                      name="password"
-                      className="text-container"
-                      placeholder="Enter Your Password"
-                      type="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                    />
+                <div className="form-group">
+                  <label htmlFor="password">Password</label>
+                  <div className="box">
+                    <div className="search">
+                      <input
+                        id="password"
+                        name="password"
+                        className="text-container"
+                        placeholder="Enter Your Password"
+                        type="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <button type="submit" className="submit-button login-button">Login</button>
-            </form>
+                <button type="submit" className="submit-button login-button">Login</button>
+              </form>
 
-            <a href="register.html" className="dont-have-account-link">
-              Don't Have Account? Sign Up
-            </a>
+              <a href="/auth/register" className="dont-have-account-link">
+                Don't Have Account? Sign Up
+              </a>
+            </div>
           </div>
         </div>
       </div>

@@ -22,7 +22,7 @@ export default function Footer() {
               <box-icon name="github" type="logo" color="#ffffff"></box-icon>
               <a
                 className="social-media"
-                href="https://github.com/FS-30/01-Front-End-Website"
+                href="https://github.com/FS-30/02-FE-Eduliterate-React"
               >
                 Github
               </a>

@@ -1,11 +1,14 @@
 @import url("https://fonts.googleapis.com/css?family=Poppins");
 @import url("https://fonts.googleapis.com/css?family=Inter:400");
 
-
-
 h1 {
   font-size: 32px;
   font-weight: bold;
+}
+
+.disabled-button {
+  opacity: 0.7;
+  cursor: not-allowed; 
 }
 
 #sticky-navbar {
@@ -258,9 +261,10 @@ p {
 .footer {
   background-color: #ffa458;
   color: white;
-  padding-left: 50px;
+  padding-left: 0px;
   padding-right: 50px;
-  padding-top: 50px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .full-width-bg {
@@ -311,10 +315,6 @@ p {
   #loggedInUsername {
     display: none;
   }
-
-  /* .special-button {
-    display: none;
-  } */
 
   .image-center {
     width: 100%;
@@ -428,9 +428,9 @@ p {
 .custom-collapse {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-out; /* Adjust the transition duration as needed */
+  transition: max-height 0.3s ease-out;
 }
 
 .custom-collapse.open {
-  max-height: 1000px; /* Set an appropriate max height */
+  max-height: 1000px;
 }

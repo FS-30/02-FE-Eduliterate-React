@@ -159,7 +159,7 @@ a{
 }
 
 .btn-books{
-    margin: 0.5rem 0rem 1rem 0rem;
+    margin: 0 auto;
     display: inline-block;
     padding: .1rem 2rem;
     font-size: 1.3rem;
@@ -198,6 +198,7 @@ a{
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(20rem,1fr));
     gap: 1.2rem;
+    align-items: center;
 }
 
 .product .product-slider .box {
@@ -231,7 +232,7 @@ a{
 
 .product .product-slider .box h3 {
     display: inline-block;
-    margin: 0;
+    margin: 0 auto;
     padding: 0.5rem 0; 
     border-radius: 45px;
     font-size: 1.2rem;
@@ -242,6 +243,7 @@ a{
     font-size: 1.1rem;
     columns: #666;
     padding: 0.5rem 0;
+    margin: 0 auto;
 }
 
 .product .product-slider .box .description {
@@ -390,11 +392,11 @@ p{
     .product .product-slider .box h3 {
         padding: 0.5rem 0;
         border-radius: 0;
-        text-align: left;
+        text-align: center;
     }
 
     .product .product-slider .box .description {
-        text-align: left;
+        text-align: center;
         padding: 0.5rem 0;
     }
 

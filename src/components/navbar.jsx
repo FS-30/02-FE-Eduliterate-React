@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-
 import logoImg from "../assets/img/logo.png";
 
 const Navbar = () => {
   const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token); 
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('is_subscribed');
+    localStorage.removeItem('paymentSuccess');
+    localStorage.removeItem('isloggedin');
+    localStorage.removeItem('id');
+    setIsLoggedIn(false);
+    window.location.href = '/auth/login';
+  };
 
   return (
     <div id="sticky-navbar">
@@ -30,32 +45,44 @@ const Navbar = () => {
             </li>
           </ul>
           <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <Link
-                to="/auth/register"
-                className="nav-link navigation"
-                id="registerButton">
-                Register
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                to="/auth/login"
-                className="nav-link navigation special-button"
-                id="loginButton">
-                Login
-              </Link>
-            </li>
-            <li
-              className="nav-item"
-              id="loggedInSection"
-              style={{ display: "none" }}
-            >
-              <span
-                className="nav-link navigation-section"
-                id="loggedInUsername"
-              ></span>
-            </li>
+            {isLoggedIn ? (
+              <li className="nav-item">
+                <button className="nav-link navigation" onClick={handleLogout}>
+                  Logout
+                </button>
+              </li>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <Link
+                    to="/auth/register"
+                    className={`nav-link navigation ${location.pathname === '/auth/register' ? 'active' : ''}`}
+                    id="registerButton"
+                  >
+                    Register
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    to="/auth/login"
+                    className={`nav-link navigation ${location.pathname === '/auth/login' ? 'active' : ''}`}
+                    id="loginButton"
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li
+                  className="nav-item"
+                  id="loggedInSection"
+                  style={{ display: "none" }}
+                >
+                  <span
+                    className="nav-link navigation-section"
+                    id="loggedInUsername"
+                  ></span>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </nav>

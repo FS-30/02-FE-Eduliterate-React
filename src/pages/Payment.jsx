@@ -52,36 +52,40 @@ export default function Payment() {
 
   const handleSubmitProof = async () => {
     handleCloseModalPayment();
-
+  
     const token = localStorage.getItem('token');
-
+    const userId = localStorage.getItem('id');
+  
     const formData = new FormData();
     formData.append('image', imageFile);
-
+  
     try {
-      const response = await fetch('https://eduliterate.cyclic.app/data/payment/upload', {
-        method: 'POST',
+      const response = await fetch(`https://eduliterate.cyclic.app/data/users/${userId}`, {
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        body: formData
+        body: JSON.stringify({ is_subscribed: true }),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         setShowSubmitProofModal(true);
-
-        localStorage.setItem("paymentSuccess", "true");
+  
+        localStorage.setItem('paymentSuccess', 'true');
+        localStorage.setItem('is_subscribed', 'true');
+  
         setTimeout(() => {
-          window.location.href = "../index.html#success";
+          window.location.href = '../#success';
         }, 3000);
       } else {
-        throw new Error('Image upload failed');
+        throw new Error('Failed to update subscription status');
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error updating subscription status:', error);
     }
-  };
+  };  
 
   return (
     <div>
@@ -218,10 +222,10 @@ export default function Payment() {
           </div>
           <div className="row">
             <div className="col">
-              <div className="col">Langganan 1 Bulan</div>
+              <div className="col">Langganan Selamanya</div>
             </div>
             <div className="col-auto ms-auto">
-              <div>45.000-</div>
+              <div>100.000-</div>
             </div>
           </div>
           <hr />
@@ -230,7 +234,7 @@ export default function Payment() {
               <div className="col">Subtotal</div>
             </div>
             <div className="col-auto ms-auto">
-              <div>Rp45.000,00-</div>
+              <div>Rp100.000,00-</div>
             </div>
           </div>
         </div>

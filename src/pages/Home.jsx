@@ -11,6 +11,10 @@ import ficon2 from "../assets/img/ficon2.png";
 import ficon3 from "../assets/img/ficon3.png";
 
 const HomePage = () => {
+
+  const isSubscribed = localStorage.getItem('is_subscribed') === 'true';
+  const isLoggedIn = localStorage.getItem('isloggedin') === null;
+  
   return (
     <>
       <Helmet>
@@ -118,8 +122,13 @@ const HomePage = () => {
             <div className="pt-5">
               <a
                 href="/payment"
-                className="btn button-orange text-white"
+                className={`btn button-orange text-white ${
+                  (isSubscribed || isLoggedIn) ? 'disabled-button' : ''
+                }`}
                 id="subscribe"
+                style={{
+                  pointerEvents: (isSubscribed || isLoggedIn) ? 'none' : 'auto',
+                }}
               >
                 SUBSCRIBE
               </a>
