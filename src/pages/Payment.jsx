@@ -91,7 +91,7 @@ export default function Payment() {
     <div>
       <Helmet>
         <title>Payment</title>
-        <link rel="icon" href="src/assets/img/Wallet.png" />
+        <link rel="icon" href="https://imgur.com/DKrU9n8.png" />
       </Helmet>
       <div className="content container-fluid custom-padding">
         <div className="row mb-5">

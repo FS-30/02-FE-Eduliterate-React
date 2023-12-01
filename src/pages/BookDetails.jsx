@@ -65,7 +65,7 @@ const BookDetails = () => {
     <div className="body-book-details">
       <Helmet>
         <title>Book Details</title>
-        <link rel="icon" href="../src/assets/img/icon.png" />
+        <link rel="icon" href="https://imgur.com/CdWfCDS.png" />
       </Helmet>
       <div className="book-details-container">
         <div className="book-details">

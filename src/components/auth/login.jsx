@@ -81,7 +81,7 @@ const Login = () => {
     <div className="login-page">
       <Helmet>
           <title>Login</title>
-          <link rel="icon" href="../../src/assets/img/icon.png" />
+          <link rel="icon" href="https://imgur.com/CdWfCDS.png" />
       </Helmet>
       <div className="card-container">
         <img className="element-removebg" src={educationImage} alt="Education" />

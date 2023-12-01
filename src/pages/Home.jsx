@@ -19,7 +19,7 @@ const HomePage = () => {
     <>
       <Helmet>
         <title>Eduliterate</title>
-        <link rel="icon" href="src/assets/img/logo.png" />
+        <link rel="icon" href="https://imgur.com/CdWfCDS.png" />
       </Helmet>
       <div className="container">
         <div className="row">

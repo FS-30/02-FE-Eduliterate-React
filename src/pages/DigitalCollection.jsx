@@ -105,7 +105,7 @@ const DigitalCollection = () => {
     <div className="books-body">
         <Helmet>
           <title>Digital Collection</title>
-          <link rel="icon" href="src/assets/img/icon.png" />
+          <link rel="icon" href="https://imgur.com/CdWfCDS.png" />
         </Helmet>
         <div className="category-section" ref={categorySectionRef} id="categorySection" style={{ transform: "translateX(-95%)"}}>
           <button onClick={handleToggleCategorySection} className="toggle-button" ref={toggleButtonRef}>
