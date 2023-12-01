@@ -49,7 +49,7 @@ const HomePage = () => {
       <div className="full-width-bg">
         <div className="row mt-5 bg-custom-secondary">
           <Row>
-            <Col sm={8} style={{paddingLeft:'50px'}}>
+            <Col m={8} style={{textAlign:"center"}}>
               <h1 className="heading2">WHAT WE DO?</h1>
               <p className="text-secondary">
                 At Eduliterate, we&apos;re passionately committed to fostering your

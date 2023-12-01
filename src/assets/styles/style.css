@@ -412,7 +412,7 @@ p {
   }
 
   .full-width-bg {
-    width: 135.8%;
+    width: 100%;
   }
 
   .left-section {
@@ -422,6 +422,10 @@ p {
 
   .bank-details {
     font-size: 10px;
+  }
+
+  .col-sm-8{
+    width: 200%;
   }
 }
 

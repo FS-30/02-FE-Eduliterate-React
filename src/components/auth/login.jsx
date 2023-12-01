@@ -86,53 +86,51 @@ const Login = () => {
       <div className="card-container">
         <img className="element-removebg" src={educationImage} alt="Education" />
         <div className="low-fi-block-header">
-          <div className="div">
-            <div className="div">
-              <div className="text-wrapper">Welcome Back!</div>
-              <p className="p-login">Please Log In to continue your learning journey with Eduliterate.</p>
+          <div className="div login-lol">
+            <div className="text-wrapper">Welcome Back!</div>
+            <p className="p-login">Please Log In to continue your learning journey with Eduliterate.</p>
 
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <div className="box">
-                    <div className="search">
-                      <input
-                        id="email"
-                        name="email"
-                        className="text-container"
-                        placeholder="Enter Your Email Here"
-                        type="text"
-                        value={formData.email}
-                        onChange={handleChange}
-                      />
-                    </div>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <div className="box">
+                  <div className="search">
+                    <input
+                      id="email"
+                      name="email"
+                      className="text-container"
+                      placeholder="Enter Your Email Here"
+                      type="text"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
+              </div>
 
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <div className="box">
-                    <div className="search">
-                      <input
-                        id="password"
-                        name="password"
-                        className="text-container"
-                        placeholder="Enter Your Password"
-                        type="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                      />
-                    </div>
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <div className="box">
+                  <div className="search">
+                    <input
+                      id="password"
+                      name="password"
+                      className="text-container"
+                      placeholder="Enter Your Password"
+                      type="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
+              </div>
 
-                <button type="submit" className="submit-button login-button">Login</button>
-              </form>
+              <button type="submit" className="submit-button login-button">Login</button>
+            </form>
 
-              <a href="/auth/register" className="dont-have-account-link">
-                Don't Have Account? Sign Up
-              </a>
-            </div>
+            <a href="/auth/register" className="dont-have-account-link">
+              Don't Have Account? Sign Up
+            </a>
           </div>
         </div>
       </div>
