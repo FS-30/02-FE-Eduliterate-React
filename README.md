@@ -5,6 +5,10 @@
 # Eduliterate
 Eduliterate is a website designed to promote literacy. It offers a range of features to enhance the user experience and help people improve their literacy skills. Eduliterate is designed with mobile responsiveness. The website is fully optimized to provide an excellent user experience on various mobile devices and screen sizes.
 
+## Full Docummentation 🛠️
+* Vercel - [Deploy Link](https://eduliterate-v2.vercel.app/)
+* Figma - [Business Requirements Document, Wireframe, ERD](https://www.figma.com/file/XYbihslYnDolb0lIXJ1LF2/Eduliterate---Final-Project?type=design&node-id=0-1&mode=design)
+
 ## Features
 - **Login and Register**: Users can create accounts and log in securely.
 - **Logout**: Users can end their current authenticated session.
