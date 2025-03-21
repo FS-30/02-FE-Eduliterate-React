@@ -82,7 +82,7 @@ const DigitalCollection = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://eduliterate.cyclic.app/data/books');
+        const response = await fetch('https://eduliterate.up.railway.app/data/books');
         if (!response.ok) {
           throw new Error('Failed to fetch books');
         }
