@@ -14,7 +14,7 @@ const BookDetails = () => {
     const fetchBookDetails = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`https://eduliterate.up.railway.app/data/books/${id}`, {
+        const response = await fetch(`https://03-be-eduliterate-express.vercel.app//data/books/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

@@ -60,7 +60,7 @@ export default function Payment() {
     formData.append('image', imageFile);
   
     try {
-      const response = await fetch(`https://eduliterate.up.railway.app/data/users/${userId}`, {
+      const response = await fetch(`https://03-be-eduliterate-express.vercel.app//data/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
