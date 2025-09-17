@@ -82,7 +82,7 @@ const DigitalCollection = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://03-be-eduliterate-express.vercel.app//data/books');
+        const response = await fetch('https://03-be-eduliterate-express.vercel.app/data/books');
         if (!response.ok) {
           throw new Error('Failed to fetch books');
         }
