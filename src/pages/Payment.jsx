@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Modal, Collapse } from "react-bootstrap";
+import { Modal, Collapse, Row, Col } from "react-bootstrap";
 import { Helmet } from 'react-helmet-async';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 import paymentImg from "../assets/img/payment.png";
 import arrowImg from "../assets/img/arrow.png";
@@ -16,10 +14,13 @@ import qrCodeImg from "../assets/img/qr-code.png";
 import transfer1Img from "../assets/img/transfer1.png";
 import wallet1Img from "../assets/img/wallet1.png";
 
+const API_BASE = import.meta.env.VITE_API_URL || 'https://03-be-eduliterate-express.vercel.app';
+
 export default function Payment() {
+  const navigate = useNavigate();
   const [openPaymentList, setOpenPaymentList] = useState(false);
   const [openQR, setOpenQR] = useState(false);
-  const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showSubmitProofModal, setShowSubmitProofModal] = useState(false);
   const [imageFile, setImageFile] = useState(null);
@@ -31,36 +32,51 @@ export default function Payment() {
 
   const handleProofUploadChange = (e) => {
     const file = e.target.files[0];
-
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        Swal.fire({ icon: 'error', title: 'Invalid file', text: 'Please upload an image file.' });
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        Swal.fire({ icon: 'error', title: 'File too large', text: 'Max file size is 5MB.' });
+        return;
+      }
       setImageFile(file);
-
       const reader = new FileReader();
-
-      reader.onload = function (event) {
-        setPreviewImage(event.target.result);
-      };
-
+      reader.onload = (event) => setPreviewImage(event.target.result);
       reader.readAsDataURL(file);
-      setIsSubmitButtonDisabled(false);
     } else {
       setImageFile(null);
-      setIsSubmitButtonDisabled(true);
       setPreviewImage(null);
     }
   };
 
   const handleSubmitProof = async () => {
+    if (!imageFile) return;
     handleCloseModalPayment();
-  
+    setIsSubmitting(true);
+    setShowSubmitProofModal(true);
+
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('id');
-  
-    const formData = new FormData();
-    formData.append('image', imageFile);
-  
+
     try {
-      const response = await fetch(`https://03-be-eduliterate-express.vercel.app/data/users/${userId}`, {
+      // Step 1: Upload the payment proof image
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      const uploadResponse = await fetch(`${API_BASE}/data/payment/upload`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload payment proof');
+      }
+
+      // Step 2: Update subscription status
+      const updateResponse = await fetch(`${API_BASE}/data/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -68,30 +84,34 @@ export default function Payment() {
         },
         body: JSON.stringify({ is_subscribed: true }),
       });
-  
-      if (response.ok) {
-        const data = await response.json();
-        setShowSubmitProofModal(true);
-  
-        localStorage.setItem('paymentSuccess', 'true');
-        localStorage.setItem('is_subscribed', 'true');
-  
-        setTimeout(() => {
-          window.location.href = '../#success';
-        }, 3000);
-      } else {
-        throw new Error('Failed to update subscription status');
+
+      if (!updateResponse.ok) {
+        throw new Error('Failed to activate subscription');
       }
+
+      localStorage.setItem('paymentSuccess', 'true');
+      localStorage.setItem('is_subscribed', 'true');
+
+      setTimeout(() => {
+        setShowSubmitProofModal(false);
+        navigate('/digital-collection');
+      }, 2500);
+
     } catch (error) {
-      console.error('Error updating subscription status:', error);
+      setShowSubmitProofModal(false);
+      setIsSubmitting(false);
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment failed',
+        text: error.message || 'Something went wrong. Please try again.',
+      });
     }
-  };  
+  };
 
   return (
     <div>
       <Helmet>
-        <title>Payment</title>
-        <link rel="icon" href="https://imgur.com/DKrU9n8.png" />
+        <title>Payment — Eduliterate</title>
       </Helmet>
       <div className="content container-fluid custom-padding">
         <div className="row mb-5">
@@ -279,9 +299,9 @@ export default function Payment() {
             <button
               className="bg-orange btn-bayar-submit text-center text-white fs-5 rounded p-2 w-100"
               onClick={handleSubmitProof}
-              disabled={isSubmitButtonDisabled}
+              disabled={!imageFile || isSubmitting}
             >
-              Submit
+              {isSubmitting ? 'Submitting...' : 'Submit Proof'}
             </button>
           </Modal.Footer>
         </Modal>

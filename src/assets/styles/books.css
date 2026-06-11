@@ -1,55 +1,93 @@
-.books-body{
+.books-body {
     background-image: url('https://c.animaapp.com/ME8XcaOo/img/2111-w039-n003-6b-p1-1.png');
+    min-height: 100vh;
 }
 
 /* Category */
 .category-section {
     position: fixed;
-    top: 28%;
+    top: 20%;
     left: 0;
     background-color: #FFFFFF;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.15);
+    border-radius: 0 12px 12px 0;
     transition: transform 0.3s ease-in-out;
-    z-index: 1;
+    z-index: 100;
+    min-width: 180px;
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar-heading {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background-color: #FFA458;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
 }
 
 .category-section ul {
     list-style: none;
     padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.category-section li {
-    margin-bottom: 10px;
-}
-
-.category-section a {
-    text-decoration: none;
-    text-align: center;
-    color: #000;
-    font-weight: bold;
-    font-size: 16px;
+.category-btn {
     display: block;
-    transition: color 0.3s;
-    padding-top: 5px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.category-section a:hover {
+.category-btn:hover {
+    background-color: #fff3e0;
+    border-color: #FFA458;
     color: #FFA458;
 }
 
-.category-section h4{
-    font-size: 15px;
+.category-btn.category-active {
     background-color: #FFA458;
-    border-radius: 0px;
-    padding: 2px 15px;
-    min-width: 120px;
+    border-color: #FFA458;
+    color: #fff;
+}
+
+.search-count {
+    font-size: 12px;
+    color: #888;
+    margin: 4px 0 0;
+    font-style: italic;
+}
+
+/* Screen-reader only utility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
     border: 0;
-    font-weight: bold;
-    margin: 0 10px;
-    text-align: center;
-    color: #FFFFFF;
 }
 
 .toggle-button {
@@ -333,6 +371,52 @@ p{
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Loading / Error / Empty states */
+.collection-loading,
+.collection-error,
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: #555;
+}
+
+.collection-spinner {
+    width: 44px;
+    height: 44px;
+    border: 4px solid #f0f0f0;
+    border-top: 4px solid #FFA458;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+}
+
+.retry-btn {
+    margin-top: 12px;
+    padding: 8px 20px;
+    background: #FFA458;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.retry-btn:hover {
+    background: #ef7919;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Book card author name */
+.book-author-name {
+    font-size: 0.85rem;
+    color: #777;
+    margin: 0 0 4px;
+    font-style: italic;
 }
 
 /* Mobile Responsive Styling */

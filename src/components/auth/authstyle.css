@@ -178,8 +178,9 @@
     background-color: #ff8533;
 }
 
-.submit-button:focus, .login-button:focus {
-    outline: none;
+.submit-button:focus-visible, .login-button:focus-visible {
+    outline: 3px solid #FFA458;
+    outline-offset: 2px;
 }
 
 .have-account-link, .dont-have-account-link {

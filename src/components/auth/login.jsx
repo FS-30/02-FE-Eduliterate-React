@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import educationImage from '../../assets/img/education.png';
-import { Helmet } from 'react-helmet-async'; 
+import { Helmet } from 'react-helmet-async';
 import './authstyle.css';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'https://03-be-eduliterate-express.vercel.app';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -20,56 +23,38 @@ const Toast = Swal.mixin({
 });
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!formData.email || !formData.password) {
-      Toast.fire({
-        icon: 'error',
-        title: 'All fields are required'
-      });
-      return;
-    }
+    setIsLoading(true);
 
     try {
-      const response = await fetch('https://eduliterate.cyclic.app/auth/login', {
+      const response = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        Toast.fire({
-          icon: 'success',
-          title: 'Login successful'
-        });
+      const data = await response.json();
 
+      if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('is_subscribed', data.is_subscribed);
         localStorage.setItem('id', data.id);
-        localStorage.setItem('isloggedin', true);
+        localStorage.setItem('isloggedin', 'true');
 
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 3000);
-        
+        Toast.fire({ icon: 'success', title: 'Login successful' });
+        setTimeout(() => navigate('/'), 1500);
       } else {
-        throw new Error('Login failed');
+        Toast.fire({ icon: 'error', title: data.message || 'Login failed' });
       }
-    } catch (error) {
-      console.error('Error during login:', error);
-      Toast.fire({
-        icon: 'error',
-        title: 'Login failed'
-      });
+    } catch {
+      Toast.fire({ icon: 'error', title: 'Network error. Please try again.' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -100,7 +85,8 @@ const Login = () => {
                       name="email"
                       className="text-container"
                       placeholder="Enter Your Email Here"
-                      type="text"
+                      type="email"
+                      autoComplete="email"
                       value={formData.email}
                       onChange={handleChange}
                     />
@@ -118,6 +104,7 @@ const Login = () => {
                       className="text-container"
                       placeholder="Enter Your Password"
                       type="password"
+                      autoComplete="current-password"
                       value={formData.password}
                       onChange={handleChange}
                     />
@@ -125,12 +112,14 @@ const Login = () => {
                 </div>
               </div>
 
-              <button type="submit" className="submit-button login-button">Login</button>
+              <button type="submit" className="submit-button login-button" disabled={isLoading}>
+                {isLoading ? 'Logging in...' : 'Login'}
+              </button>
             </form>
 
-            <a href="/auth/register" className="dont-have-account-link">
-              Don't Have Account? Sign Up
-            </a>
+            <Link to="/auth/register" className="dont-have-account-link">
+              Don&apos;t have an account? Sign Up
+            </Link>
           </div>
         </div>
       </div>

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import educationImage from '../../assets/img/education.png';
-import { Helmet } from 'react-helmet-async'; 
+import { Helmet } from 'react-helmet-async';
 import './authstyle.css';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'https://03-be-eduliterate-express.vercel.app';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -20,60 +23,42 @@ const Toast = Swal.mixin({
 });
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    username: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: '', username: '', password: '', confirmPassword: '' });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.email || !formData.username || !formData.password || !formData.confirmPassword) {
-      Toast.fire({
-        icon: 'error',
-        title: 'All fields are required'
-      });
-      return;
-    }
-
     if (formData.password !== formData.confirmPassword) {
-      Toast.fire({
-        icon: 'error',
-        title: 'Passwords do not match'
-      });
+      Toast.fire({ icon: 'error', title: 'Passwords do not match' });
+      return;
+    }
+    if (formData.password.length < 8) {
+      Toast.fire({ icon: 'error', title: 'Password must be at least 8 characters' });
       return;
     }
 
+    setIsLoading(true);
     try {
-      const response = await fetch('https://eduliterate.cyclic.app/auth/register', {
+      const response = await fetch(`${API_BASE}/auth/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        Toast.fire({
-          icon: 'success',
-          title: data.message
-        });
+      const data = await response.json();
 
-        setTimeout(() => {
-          window.location.href = '/auth/login';
-        }, 3000);
+      if (response.ok) {
+        Toast.fire({ icon: 'success', title: data.message });
+        setTimeout(() => navigate('/auth/login'), 1500);
       } else {
-        throw new Error('Registration failed');
+        Toast.fire({ icon: 'error', title: data.message || 'Registration failed' });
       }
-    } catch (error) {
-      console.error('Error during registration:', error);
-      Toast.fire({
-        icon: 'error',
-        title: 'Registration failed'
-      });
+    } catch {
+      Toast.fire({ icon: 'error', title: 'Network error. Please try again.' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -163,12 +148,14 @@ const Register = () => {
                 </div>
               </div>
 
-              <button type="submit" className="submit-button">Register</button>
+              <button type="submit" className="submit-button" disabled={isLoading}>
+                {isLoading ? 'Creating account...' : 'Register'}
+              </button>
             </form>
 
-            <a href="/auth/login" className="have-account-link">
-              Already Have an Account?
-            </a>
+            <Link to="/auth/login" className="have-account-link">
+              Already have an account? Log In
+            </Link>
           </div>
         </div>
       </div>

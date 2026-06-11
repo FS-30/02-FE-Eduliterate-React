@@ -1,9 +1,21 @@
-@import url("https://fonts.googleapis.com/css?family=Poppins");
-@import url("https://fonts.googleapis.com/css?family=Inter:400");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap");
+
+:root {
+  --color-primary: #ffa458;
+  --color-primary-dark: #ef7919;
+  --color-primary-darker: #d45a00;
+  --color-text: #333;
+  --color-text-muted: #717171;
+  --navbar-height: 56px;
+}
 
 h1 {
   font-size: 32px;
   font-weight: bold;
+}
+
+h2, h3 {
+  font-weight: 700;
 }
 
 .disabled-button {
@@ -67,9 +79,28 @@ h1 {
 }
 
 p {
-  font-family: "Inter-Regular", Helvetica;
+  font-family: 'Inter', Helvetica, sans-serif;
   font-size: 16px;
-  color: #717171;
+  color: var(--color-text-muted);
+}
+
+/* Logout button — styled as nav link */
+.btn-logout {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Accessible focus rings */
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Remove outline only for mouse users */
+.btn-logout:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .button-orange {

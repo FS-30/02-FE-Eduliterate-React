@@ -1,10 +1,13 @@
 import React from "react";
-
-const isSubscribed = localStorage.getItem("is_subscribed");
+import { useNavigate } from "react-router-dom";
 
 export default function BookItem({ books, paymentSuccess }) {
+  const navigate = useNavigate();
+  const isSubscribed = localStorage.getItem("is_subscribed") === 'true';
+  const hasAccess = isSubscribed || paymentSuccess === 'true';
+
   return (
-    <section className="product" id="product">
+    <section className="product" id="product" aria-label="Digital Collection">
       <h1 className="heading">
         Digital<span>Collection</span>
       </h1>
@@ -12,29 +15,27 @@ export default function BookItem({ books, paymentSuccess }) {
         <div className="wrapper">
           {books.map((book) => {
             const isSubscribeNeeded = book.price === "SUBSCRIBE NEEDED";
-            const isSubscribedValue = isSubscribed === 'true';
+            const isLocked = isSubscribeNeeded && !hasAccess;
 
             return (
               <div
                 key={book._id}
-                className={`box ${book.type}`}
-                id={book.type}
+                className={`box ${book.type}${isLocked ? ' locked' : ''}`}
+                role="article"
+                aria-label={`${book.title} — ${isLocked ? 'Subscription required' : 'Available'}`}
+                tabIndex={isLocked ? -1 : 0}
                 style={{
                   border: isSubscribeNeeded
-                    ? (paymentSuccess === 'true' || isSubscribedValue ? "2px solid green" : "2px solid red")
+                    ? (hasAccess ? "2px solid green" : "2px solid red")
                     : "none",
-                  pointerEvents:
-                    isSubscribeNeeded && !(paymentSuccess === 'true' || isSubscribedValue)
-                      ? "none"
-                      : "auto",
+                  pointerEvents: isLocked ? "none" : "auto",
+                  opacity: isLocked ? 0.65 : 1,
                 }}
-                onClick={() => {
-                  const bookDetailsUrl = `/book-details/${book._id}`;
-                  window.location.href = bookDetailsUrl;
-                }}
+                onClick={() => !isLocked && navigate(`/book-details/${book._id}`)}
+                onKeyDown={(e) => e.key === 'Enter' && !isLocked && navigate(`/book-details/${book._id}`)}
               >
-                <img src={book.image} alt={book.title} />
-                {book.type === "Audio-Book" && (
+                <img src={book.image} alt={`Cover of ${book.title}`} />
+                {book.type === "Audio-Book" && book.icon && (
                   <img
                     src={book.icon}
                     className="lock-icon"
@@ -43,13 +44,19 @@ export default function BookItem({ books, paymentSuccess }) {
                   />
                 )}
                 <h3>{book.title}</h3>
-                <div className="price">{book.price}</div>
+                <p className="book-author-name">{book.author}</p>
+                <div className="price">{isLocked ? "🔒 Subscribe to Read" : book.price}</div>
                 <div className="description">
                   <span>{book.description}</span>
                 </div>
-                <a href={`#${book._id}`} className="btn btn-books">
+                <button
+                  className="btn btn-books"
+                  disabled={isLocked}
+                  aria-label={`Read ${book.title}`}
+                  onClick={(e) => { e.stopPropagation(); navigate(`/book-details/${book._id}`); }}
+                >
                   Read
-                </a>
+                </button>
               </div>
             );
           })}

@@ -1,145 +1,133 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from 'react-helmet-async';
 import "../assets/styles/books.css";
 import Footer from "../components/Footer";
 import BookItem from "../components/BookItem";
 
+const API_BASE = import.meta.env.VITE_API_URL || 'https://03-be-eduliterate-express.vercel.app';
+
 const DigitalCollection = () => {
   const [books, setBooks] = useState([]);
-  const [paymentSuccess, setPaymentSuccess] = useState('');
-
-  const searchInputRef = useRef(null);
-  const searchResultsRef = useRef(null);
-  const categorySectionRef = useRef(null);
-  const toggleButtonRef = useRef(null);
-  const isCategorySectionVisibleRef = useRef(false);
-  const currentSearchQueryRef = useRef("");
-
-  const handleToggleCategorySection = () => {
-    const categorySection = categorySectionRef.current;
-    if (categorySection) {
-      if (isCategorySectionVisibleRef.current) {
-        categorySection.style.transform = "translateX(-95%)";
-      } else {
-        categorySection.style.transform = "translateX(0)";
-      }
-
-      isCategorySectionVisibleRef.current = !isCategorySectionVisibleRef.current;
-    }
-  };
-
-  const handleSearchInput = () => {
-    const searchInput = searchInputRef.current;
-    const searchResults = searchResultsRef.current;
-    const currentSearchQuery = currentSearchQueryRef.current;
-
-    if (searchInput && searchResults) {
-      const searchQuery = searchInput.value.toLowerCase().trim();
-
-      if (searchQuery !== currentSearchQuery) {
-        currentSearchQueryRef.current = searchQuery;
-
-        const bookTitles = document.querySelectorAll(".box h3");
-
-        searchResults.innerHTML = "";
-
-        if (searchQuery === "") {
-          searchResults.style.display = "none";
-        } else {
-          bookTitles.forEach((title, index) => {
-            const titleText = title.textContent.toLowerCase();
-            if (titleText.includes(searchQuery)) {
-              const resultItem = document.createElement("a");
-              resultItem.href = "#";
-              resultItem.textContent = title.textContent;
-              resultItem.addEventListener("click", (event) => {
-                event.preventDefault();
-                scrollToBook(index);
-              });
-              searchResults.appendChild(resultItem);
-            }
-          });
-
-          if (searchResults.children.length === 0) {
-            const noResults = document.createElement("div");
-            noResults.textContent = "No results found";
-            searchResults.appendChild(noResults);
-          }
-
-          searchResults.style.display = "block";
-        }
-      }
-    }
-  };
-
-  const scrollToBook = (index) => {
-    const books = document.querySelectorAll(".box");
-    if (index >= 0 && index < books.length) {
-      books[index].scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('All');
+  const paymentSuccess = localStorage.getItem('paymentSuccess');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://03-be-eduliterate-express.vercel.app/data/books');
-        if (!response.ok) {
-          throw new Error('Failed to fetch books');
-        }
+        const response = await fetch(`${API_BASE}/data/books`);
+        if (!response.ok) throw new Error('Failed to fetch books');
         const data = await response.json();
-        setBooks(data); 
-      } catch (error) {
-        console.error('Error loading book data:', error);
+        setBooks(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
-  
     fetchData();
-  
-    const storedPaymentSuccess = localStorage.getItem('paymentSuccess');
-    if (storedPaymentSuccess) {
-      setPaymentSuccess(storedPaymentSuccess);
-    }
-  }, []);  
+  }, []);
+
+  const filteredBooks = books.filter(book => {
+    const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter = activeFilter === 'All' || book.type === activeFilter;
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <div className="books-body">
-        <Helmet>
-          <title>Digital Collection</title>
-          <link rel="icon" href="https://imgur.com/CdWfCDS.png" />
-        </Helmet>
-        <div className="category-section" ref={categorySectionRef} id="categorySection" style={{ transform: "translateX(-95%)"}}>
-          <button onClick={handleToggleCategorySection} className="toggle-button" ref={toggleButtonRef}>
-            &rarr;
-          </button>
-          <ul>
-            <h4>
-              <span>Category</span>
-            </h4>
-            <li><a href="#E-Book">E-Books</a></li>
-            <li><a href="#Audio-Book">Audio Books</a></li>
-            <h4>
-              <span>Search</span>
-            </h4>
-            <div className="search-container">
+      <Helmet>
+        <title>Digital Collection — Eduliterate</title>
+        <meta name="description" content="Browse our digital collection of free and premium e-books and audio books." />
+      </Helmet>
+
+      {/* Sidebar */}
+      <aside
+        className={`category-section ${isSidebarOpen ? 'open' : ''}`}
+        aria-label="Filter and search"
+        style={{ transform: isSidebarOpen ? 'translateX(0)' : 'translateX(-95%)' }}
+      >
+        <button
+          className="toggle-button"
+          onClick={() => setIsSidebarOpen(v => !v)}
+          aria-label={isSidebarOpen ? 'Close filter panel' : 'Open filter panel'}
+          aria-expanded={isSidebarOpen}
+        >
+          {isSidebarOpen ? '←' : '→'}
+        </button>
+
+        <div className="sidebar-content">
+          <div>
+            <h3 className="sidebar-heading">Category</h3>
+            <ul>
+              {['All', 'E-Book', 'Audio-Book'].map(type => (
+                <li key={type}>
+                  <button
+                    className={`category-btn ${activeFilter === type ? 'category-active' : ''}`}
+                    onClick={() => setActiveFilter(type)}
+                    aria-pressed={activeFilter === type}
+                  >
+                    {type}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="sidebar-heading">Search</h3>
+            <div className="search-container" role="search">
+              <label htmlFor="search-input" className="sr-only">Search books</label>
               <input
-                type="text"
                 id="search-input"
-                placeholder="Search..."
-                ref={searchInputRef}
-                onInput={handleSearchInput}
+                type="search"
+                placeholder="Title or author..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Search books by title or author"
               />
-              <div id="search-results" ref={searchResultsRef}></div>
+              {searchQuery && (
+                <p className="search-count" aria-live="polite">
+                  {filteredBooks.length} result{filteredBooks.length !== 1 ? 's' : ''}
+                </p>
+              )}
             </div>
-          </ul>
+          </div>
         </div>
+      </aside>
 
-        <BookItem books={books} paymentSuccess={paymentSuccess}/>
+      {loading ? (
+        <div className="collection-loading" role="status" aria-label="Loading books">
+          <div className="collection-spinner" />
+          <p>Loading collection...</p>
+        </div>
+      ) : error ? (
+        <div className="collection-error" role="alert">
+          <p>Failed to load books: {error}</p>
+          <button className="retry-btn" onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      ) : (
+        <>
+          <BookItem books={filteredBooks} paymentSuccess={paymentSuccess} />
+          {filteredBooks.length === 0 && searchQuery && (
+            <div className="no-results" role="status">
+              <p>No books found for &ldquo;{searchQuery}&rdquo;</p>
+            </div>
+          )}
+        </>
+      )}
 
+      {!loading && !error && (
         <div className="col text-center text-white">
-            <p className="more-ebooks">MORE E-BOOKS COMING SOON</p>
+          <p className="more-ebooks">MORE E-BOOKS COMING SOON</p>
         </div>
+      )}
 
-        <Footer/>
+      <Footer />
     </div>
   );
 };
