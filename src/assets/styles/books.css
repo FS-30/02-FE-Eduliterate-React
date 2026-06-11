@@ -197,16 +197,16 @@ a{
 }
 
 .btn-books{
+    flex-shrink: 0;
     margin: 0 auto;
     display: inline-block;
-    padding: .1rem 2rem;
-    font-size: 1.3rem;
+    padding: .4rem 2rem;
+    font-size: 1.1rem;
     border-radius: .5rem;
     border: .1rem solid #000;
     color: #000;
     cursor: pointer;
     background: none;
-    position:unset;
 }
 
 .btn-books:hover{
@@ -236,13 +236,14 @@ a{
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(20rem,1fr));
     gap: 1.2rem;
-    align-items: center;
+    align-items: stretch;
 }
 
 .product .product-slider .box {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 100%;
     background-color: #fff;
     border-radius: .5rem;
     text-align: center;
@@ -250,10 +251,10 @@ a{
     padding: 3rem 1rem 1rem 1rem;
     outline: .0rem solid rgba(0, 0, 0, .1);
     outline-offset: -1rem;
-    text-align: center;
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .3);
     transition: .2s linear;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
 .product .product-slider .box:hover {
@@ -285,10 +286,15 @@ a{
 }
 
 .product .product-slider .box .description {
+    flex-grow: 1;
     font-size: 0.8rem;
     text-align: justify;
     font-weight: 500;
     padding: 1rem 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
 }
 
 .product .product-slider .box .logo-audiobook img {
