@@ -42,7 +42,8 @@ const Login = () => {
 
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        localStorage.setItem('is_subscribed', data.is_subscribed);
+        // Explicit boolean → "true"/"false" — never "undefined"
+        localStorage.setItem('is_subscribed', data.is_subscribed === true ? 'true' : 'false');
         localStorage.setItem('id', data.id);
         localStorage.setItem('isloggedin', 'true');
 

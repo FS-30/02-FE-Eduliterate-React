@@ -13,7 +13,68 @@ const DigitalCollection = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState('All');
-  const paymentSuccess = localStorage.getItem('paymentSuccess');
+
+  // Single source of truth for subscription status — derived from localStorage
+  // and re-validated from the server on mount to fix stale-cache issues.
+  const [isSubscribed, setIsSubscribed] = useState(
+    () => localStorage.getItem('is_subscribed') === 'true'
+  );
+
+  // Re-verify subscription from the server on every mount.
+  // This ensures a user who subscribed on another device (or whose
+  // localStorage is stale) gets the correct access level immediately.
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    const verify = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        let serverSubscribed = data.is_subscribed === true;
+
+        // Repair broken state: payment completed but DB was never updated.
+        // This happens when the frontend and backend were at different versions
+        // during the payment flow — the localStorage flag proves the user paid.
+        if (!serverSubscribed && localStorage.getItem('paymentSuccess') === 'true') {
+          const userId = localStorage.getItem('id');
+          if (userId) {
+            try {
+              await fetch(`${API_BASE}/data/users/${userId}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ is_subscribed: true }),
+              });
+              // Re-verify after repair attempt
+              const res2 = await fetch(`${API_BASE}/auth/me`, {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              if (res2.ok) {
+                const data2 = await res2.json();
+                serverSubscribed = data2.is_subscribed === true;
+              }
+            } catch {
+              // Non-critical — fall through with original server value
+            }
+          }
+        }
+
+        // Sync localStorage so subsequent renders and other pages are correct
+        localStorage.setItem('is_subscribed', serverSubscribed ? 'true' : 'false');
+        setIsSubscribed(serverSubscribed);
+      } catch {
+        // Network failure — fall back to the localStorage value already in state
+      }
+    };
+
+    verify();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +93,8 @@ const DigitalCollection = () => {
   }, []);
 
   const filteredBooks = books.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch =
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       book.author.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = activeFilter === 'All' || book.type === activeFilter;
     return matchesSearch && matchesFilter;
@@ -112,7 +174,7 @@ const DigitalCollection = () => {
         </div>
       ) : (
         <>
-          <BookItem books={filteredBooks} paymentSuccess={paymentSuccess} />
+          <BookItem books={filteredBooks} isSubscribed={isSubscribed} />
           {filteredBooks.length === 0 && searchQuery && (
             <div className="no-results" role="status">
               <p>No books found for &ldquo;{searchQuery}&rdquo;</p>

@@ -8,6 +8,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://03-be-eduliterate-expr
 const ReadingMode = ({ content, isSpeaking, currentParagraphIndex, onClose }) => {
   const paragraphs = content?.split('\n').filter(p => p.trim()) || [];
   const activeParagraphRef = useRef(null);
+  const [fontSize, setFontSize] = useState(18);
 
   useEffect(() => {
     if (activeParagraphRef.current) {
@@ -15,24 +16,65 @@ const ReadingMode = ({ content, isSpeaking, currentParagraphIndex, onClose }) =>
     }
   }, [currentParagraphIndex]);
 
+  // Close on Escape key — standard dialog behaviour
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  const progress = paragraphs.length > 0 && currentParagraphIndex >= 0
+    ? Math.round(((currentParagraphIndex + 1) / paragraphs.length) * 100)
+    : 0;
+
   return (
     <div className="reading-overlay" role="dialog" aria-modal="true" aria-label="Reading mode">
       <div className="reading-toolbar">
         <span className="reading-progress">
           {isSpeaking && currentParagraphIndex >= 0
-            ? `Paragraph ${currentParagraphIndex + 1} / ${paragraphs.length}`
+            ? `${currentParagraphIndex + 1} / ${paragraphs.length} paragraphs`
             : 'Reading Mode'}
         </span>
-        <button className="reading-close-btn" onClick={onClose} aria-label="Close reading mode">
+        <div className="reading-font-controls" aria-label="Font size controls">
+          <button
+            className="reading-font-btn"
+            onClick={() => setFontSize(s => Math.max(14, s - 2))}
+            aria-label="Decrease font size"
+            disabled={fontSize <= 14}
+          >A−</button>
+          <span className="reading-font-size">{fontSize}px</span>
+          <button
+            className="reading-font-btn"
+            onClick={() => setFontSize(s => Math.min(28, s + 2))}
+            aria-label="Increase font size"
+            disabled={fontSize >= 28}
+          >A+</button>
+        </div>
+        <button className="reading-close-btn" onClick={onClose} aria-label="Close reading mode (Escape)">
           ✕ Close
         </button>
       </div>
+
+      {isSpeaking && currentParagraphIndex >= 0 && (
+        <div
+          className="reading-progress-bar"
+          role="progressbar"
+          aria-valuenow={progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Reading progress: ${progress}%`}
+        >
+          <div className="reading-progress-fill" style={{ width: `${progress}%` }} />
+        </div>
+      )}
+
       <div className="reading-content" role="article">
         {paragraphs.map((para, idx) => (
           <p
             key={idx}
             ref={idx === currentParagraphIndex ? activeParagraphRef : null}
             className={`reading-paragraph ${idx === currentParagraphIndex && isSpeaking ? 'reading-active' : ''}`}
+            style={{ fontSize: `${fontSize}px` }}
           >
             {para}
           </p>
@@ -59,6 +101,25 @@ const BookDetails = () => {
 
   const utteranceRef = useRef(null);
   const paragraphsRef = useRef([]);
+  const indonesianVoiceRef = useRef(null);
+
+  // Resolve the best available Indonesian TTS voice.
+  // speechSynthesis.getVoices() is async on Chrome — voices may be empty
+  // until the onvoiceschanged event fires, so we handle both cases.
+  useEffect(() => {
+    const pickVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return;
+      // Prefer exact id-ID locale, fall back to any id-* voice
+      indonesianVoiceRef.current =
+        voices.find(v => v.lang === 'id-ID') ||
+        voices.find(v => v.lang.startsWith('id')) ||
+        null;
+    };
+    pickVoice();
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+    return () => { window.speechSynthesis.onvoiceschanged = null; };
+  }, []);
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -68,8 +129,15 @@ const BookDetails = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (response.status === 401 || response.status === 403) {
-          navigate('/auth/login');
+        if (response.status === 401) {
+          navigate(`/auth/login?redirect=/book-details/${id}`);
+          return;
+        }
+
+        if (response.status === 403) {
+          // Don't auto-redirect to payment — the payment page should only open
+          // from an explicit Subscribe action. Send back to the collection instead.
+          navigate('/digital-collection');
           return;
         }
 
@@ -113,6 +181,8 @@ const BookDetails = () => {
       }
 
       const utterance = new SpeechSynthesisUtterance(paragraphs[index]);
+      utterance.lang = 'id-ID';
+      if (indonesianVoiceRef.current) utterance.voice = indonesianVoiceRef.current;
       utterance.rate = rate;
       utteranceRef.current = utterance;
 

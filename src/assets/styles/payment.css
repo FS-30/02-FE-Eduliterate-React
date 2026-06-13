@@ -1,0 +1,384 @@
+.payment-page {
+  min-height: 100vh;
+  background-color: #f9fbfd;
+  padding-bottom: 60px;
+}
+
+.payment-wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 20px 40px;
+}
+
+/* ── Back nav ── */
+.payment-back-row {
+  padding-top: 20px;
+  margin-bottom: 24px;
+}
+
+.payment-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #333;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.payment-back-link:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.payment-back-arrow {
+  width: 20px;
+  height: auto;
+}
+
+/* ── Hero banner ── */
+.payment-hero {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.payment-hero-img {
+  width: 100%;
+  display: block;
+  min-height: 120px;
+  object-fit: cover;
+}
+
+.payment-hero-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 100%);
+  padding: 16px;
+}
+
+.payment-hero-text h2 {
+  color: #fff;
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  font-weight: 700;
+  margin: 0 0 6px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.payment-hero-text p {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Section labels ── */
+.payment-section-label {
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin-bottom: 12px;
+}
+
+/* ── Payment method blocks ── */
+.payment-method-block {
+  margin-bottom: 10px;
+}
+
+.payment-method-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #dde3ea;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  text-align: left;
+}
+
+.payment-method-toggle:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 164, 88, 0.12);
+}
+
+.payment-method-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.payment-method-chevron {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: #999;
+}
+
+/* ── Bank panel ── */
+.bank-panel {
+  background: #f5f7fa;
+  border: 1px solid #e0e6ed;
+  border-radius: 0 0 8px 8px;
+  padding: 20px 16px;
+}
+
+.bank-panel-instruction {
+  font-size: 0.875rem;
+  color: #555;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.bank-accounts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.bank-account-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 14px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.bank-logo {
+  height: 36px;
+  width: auto;
+  max-width: 80px;
+  object-fit: contain;
+}
+
+.bank-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.bank-number {
+  font-size: 0.8rem;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+/* ── QR code ── */
+.qr-code {
+  display: block;
+  margin: 0 auto;
+  width: clamp(100px, 30%, 180px);
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+/* ── Order summary ── */
+.payment-summary {
+  background: #fff;
+  border: 1px solid #dde3ea;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.payment-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #444;
+  padding: 4px 0;
+}
+
+.payment-summary-total {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1a1a1a;
+}
+
+.payment-summary-divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 10px 0;
+}
+
+/* ── Pay now button ── */
+.btn-pay-now {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  letter-spacing: 0.02em;
+}
+
+.btn-pay-now:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-pay-now:active {
+  transform: scale(0.99);
+  background-color: var(--color-primary-darker);
+}
+
+.btn-pay-now:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── Upload modal ── */
+.proof-upload-label {
+  display: inline-block;
+  padding: 10px 18px;
+  background-color: #f0f0f0;
+  border: 1.5px dashed #bbb;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #444;
+  transition: background-color 0.2s, border-color 0.2s;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.proof-upload-label:hover {
+  background-color: #fff3e0;
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+.proof-upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.proof-preview-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.proof-preview-img {
+  max-width: 100%;
+  max-height: 260px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  object-fit: contain;
+}
+
+.btn-submit-proof {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-submit-proof:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-submit-proof:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancel-proof {
+  width: 100%;
+  padding: 10px;
+  background: none;
+  color: #666;
+  font-size: 0.875rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.btn-cancel-proof:hover {
+  border-color: #aaa;
+}
+
+/* ── Processing modal ── */
+.processing-modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+.processing-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 12px 0 4px;
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .payment-wrapper {
+    padding: 16px 12px 40px;
+  }
+
+  .bank-accounts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-account-card {
+    flex-direction: row;
+    text-align: left;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .bank-logo {
+    height: 28px;
+  }
+
+  .qr-code {
+    width: clamp(120px, 50%, 200px);
+  }
+}

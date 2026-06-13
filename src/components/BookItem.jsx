@@ -1,10 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function BookItem({ books, paymentSuccess }) {
+export default function BookItem({ books, isSubscribed }) {
   const navigate = useNavigate();
-  const isSubscribed = localStorage.getItem("is_subscribed") === 'true';
-  const hasAccess = isSubscribed || paymentSuccess === 'true';
 
   return (
     <section className="product" id="product" aria-label="Digital Collection">
@@ -14,44 +12,74 @@ export default function BookItem({ books, paymentSuccess }) {
       <div className="product-slider">
         <div className="wrapper">
           {books.map((book) => {
-            const isSubscribeNeeded = book.price === "SUBSCRIBE NEEDED";
-            const isLocked = isSubscribeNeeded && !hasAccess;
+            const needsSubscription = book.price === "SUBSCRIBE NEEDED";
+            const isLocked = needsSubscription && !isSubscribed;
+
+            const cardBorder = needsSubscription
+              ? isSubscribed
+                ? '2px solid #28a745'
+                : '2px solid #dee2e6'
+              : 'none';
+
+            if (isLocked) {
+              return (
+                <div
+                  key={book._id}
+                  className="box locked"
+                  role="article"
+                  aria-label={`${book.title} — Subscription required`}
+                  style={{ border: cardBorder }}
+                >
+                  <img src={book.image} alt={`Cover of ${book.title}`} loading="lazy" />
+                  <h3>{book.title}</h3>
+                  <p className="book-author-name">{book.author}</p>
+                  <div className="price locked-price">🔒 Subscription Required</div>
+                  <div className="description">
+                    <span>{book.description}</span>
+                  </div>
+                  <button
+                    className="btn btn-books btn-subscribe"
+                    onClick={() => navigate('/payment')}
+                    aria-label={`Subscribe to read ${book.title}`}
+                  >
+                    Subscribe to Read
+                  </button>
+                </div>
+              );
+            }
 
             return (
               <div
                 key={book._id}
-                className={`box ${book.type}${isLocked ? ' locked' : ''}`}
+                className="box"
                 role="article"
-                aria-label={`${book.title} — ${isLocked ? 'Subscription required' : 'Available'}`}
-                tabIndex={isLocked ? -1 : 0}
-                style={{
-                  border: isSubscribeNeeded
-                    ? (hasAccess ? "2px solid green" : "2px solid red")
-                    : "none",
-                  pointerEvents: isLocked ? "none" : "auto",
-                  opacity: isLocked ? 0.65 : 1,
-                }}
-                onClick={() => !isLocked && navigate(`/book-details/${book._id}`)}
-                onKeyDown={(e) => e.key === 'Enter' && !isLocked && navigate(`/book-details/${book._id}`)}
+                aria-label={book.title}
+                tabIndex={0}
+                style={{ border: cardBorder }}
+                onClick={() => navigate(`/book-details/${book._id}`)}
+                onKeyDown={(e) => e.key === 'Enter' && navigate(`/book-details/${book._id}`)}
               >
-                <img src={book.image} alt={`Cover of ${book.title}`} />
+                <img src={book.image} alt={`Cover of ${book.title}`} loading="lazy" />
                 {book.type === "Audio-Book" && book.icon && (
                   <img
                     src={book.icon}
-                    className="lock-icon"
                     alt="Audio Book"
-                    style={{ width: "50px", height: "50px" }}
+                    className="audiobook-icon"
+                    style={{ width: "40px", height: "40px" }}
                   />
                 )}
                 <h3>{book.title}</h3>
                 <p className="book-author-name">{book.author}</p>
-                <div className="price">{isLocked ? "🔒 Subscribe to Read" : book.price}</div>
+                <div className="price">
+                  {needsSubscription
+                    ? <span className="price-subscribed">✓ Included in Subscription</span>
+                    : book.price}
+                </div>
                 <div className="description">
                   <span>{book.description}</span>
                 </div>
                 <button
                   className="btn btn-books"
-                  disabled={isLocked}
                   aria-label={`Read ${book.title}`}
                   onClick={(e) => { e.stopPropagation(); navigate(`/book-details/${book._id}`); }}
                 >

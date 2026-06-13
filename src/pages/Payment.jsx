@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
+import "../assets/styles/payment.css";
 import paymentImg from "../assets/img/payment.png";
 import arrowImg from "../assets/img/arrow.png";
 import bankBcaImg from "../assets/img/bank-bca.png";
@@ -16,309 +17,272 @@ import wallet1Img from "../assets/img/wallet1.png";
 
 const API_BASE = import.meta.env.VITE_API_URL || 'https://03-be-eduliterate-express.vercel.app';
 
+const BANK_ACCOUNTS = [
+  { img: bankBriImg, name: 'BRI', number: '0779-1768-9000' },
+  { img: bankMandiriImg, name: 'Mandiri', number: '088-1792-0222' },
+  { img: bankBcaImg, name: 'BCA', number: '031-789-0020' },
+];
+
 export default function Payment() {
   const navigate = useNavigate();
-  const [openPaymentList, setOpenPaymentList] = useState(false);
+  const [openBankTransfer, setOpenBankTransfer] = useState(false);
   const [openQR, setOpenQR] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [showSubmitProofModal, setShowSubmitProofModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showProcessingModal, setShowProcessingModal] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
-  const handleCloseModalPayment = () => setShowModal(false);
-  const handleShowModalPayment = () => setShowModal(true);
-  const handleCloseSubmitProofModal = () => setShowSubmitProofModal(false);
-
   const handleProofUploadChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        Swal.fire({ icon: 'error', title: 'Invalid file', text: 'Please upload an image file.' });
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        Swal.fire({ icon: 'error', title: 'File too large', text: 'Max file size is 5MB.' });
-        return;
-      }
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onload = (event) => setPreviewImage(event.target.result);
-      reader.readAsDataURL(file);
-    } else {
+    if (!file) {
       setImageFile(null);
       setPreviewImage(null);
+      return;
     }
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({ icon: 'error', title: 'Invalid file type', text: 'Please upload an image file (JPG, PNG, etc.).' });
+      e.target.value = '';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({ icon: 'error', title: 'File too large', text: 'Maximum file size is 5 MB.' });
+      e.target.value = '';
+      return;
+    }
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev) => setPreviewImage(ev.target.result);
+    reader.readAsDataURL(file);
   };
 
   const handleSubmitProof = async () => {
-    if (!imageFile) return;
-    handleCloseModalPayment();
+    if (!imageFile || isSubmitting) return;
+
+    setShowUploadModal(false);
     setIsSubmitting(true);
-    setShowSubmitProofModal(true);
+    setShowProcessingModal(true);
 
     const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('id');
 
     try {
-      // Step 1: Upload the payment proof image
       const formData = new FormData();
       formData.append('image', imageFile);
 
-      const uploadResponse = await fetch(`${API_BASE}/data/payment/upload`, {
+      const response = await fetch(`${API_BASE}/data/payment/upload`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
-      if (!uploadResponse.ok) {
-        throw new Error('Failed to upload payment proof');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to upload payment proof');
       }
 
-      // Step 2: Update subscription status
-      const updateResponse = await fetch(`${API_BASE}/data/users/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ is_subscribed: true }),
-      });
-
-      if (!updateResponse.ok) {
-        throw new Error('Failed to activate subscription');
+      // Explicitly activate subscription in DB.
+      // The payment endpoint handles this on the current backend, but an explicit
+      // PUT call ensures it also works when running against an older deployment.
+      const userId = localStorage.getItem('id');
+      if (userId) {
+        try {
+          await fetch(`${API_BASE}/data/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ is_subscribed: true }),
+          });
+        } catch {
+          // Non-fatal: payment endpoint already handled activation
+        }
       }
 
-      localStorage.setItem('paymentSuccess', 'true');
       localStorage.setItem('is_subscribed', 'true');
+      localStorage.setItem('paymentSuccess', 'true');
 
       setTimeout(() => {
-        setShowSubmitProofModal(false);
+        setShowProcessingModal(false);
         navigate('/digital-collection');
-      }, 2500);
-
+      }, 2000);
     } catch (error) {
-      setShowSubmitProofModal(false);
+      setShowProcessingModal(false);
       setIsSubmitting(false);
       Swal.fire({
         icon: 'error',
-        title: 'Payment failed',
+        title: 'Submission failed',
         text: error.message || 'Something went wrong. Please try again.',
       });
     }
   };
 
+  const resetModal = () => {
+    setShowUploadModal(false);
+    setImageFile(null);
+    setPreviewImage(null);
+  };
+
   return (
-    <div>
+    <div className="payment-page">
       <Helmet>
         <title>Payment — Eduliterate</title>
       </Helmet>
-      <div className="content container-fluid custom-padding">
-        <div className="row mb-5">
-          <div className="col" style={{paddingTop: "50px"}}>
-            <a
-              href="/"
-              className="flex items-center btn btn-light fw-bold fs-5 transparent-background"
-            >
-              <img src={arrowImg} className="img-fluid me-4" />
-              Home
-            </a>
+
+      <div className="payment-wrapper animate">
+        {/* Back nav */}
+        <div className="payment-back-row">
+          <a href="/" className="payment-back-link" aria-label="Go back to home">
+            <img src={arrowImg} alt="" aria-hidden="true" className="payment-back-arrow" />
+            Home
+          </a>
+        </div>
+
+        {/* Hero banner */}
+        <div className="payment-hero">
+          <img className="payment-hero-img" src={paymentImg} alt="Subscribe to Eduliterate" />
+          <div className="payment-hero-text">
+            <h2>Subscribe Now!</h2>
+            <p>Unlock access to all available e-books and audio books</p>
           </div>
         </div>
-        <div className="animate">
-          <div className="bg-payment-container text-center">
-            <img
-              className="bg-payment img-payment"
-              src={paymentImg}
-              alt="Payment Image"
-            />
-            <div
-              className="bg-payment-text"
-              style={{ textShadow: "4px 4px 4px rgba(0, 0, 0, 0.3)" }}
-            >
-              <h2 className="text-white">Subscribe Now!</h2>
-              <p className="text-white">
-                Unlock access to all available e-books
-              </p>
-            </div>
-          </div>
-          <div className="row mt-3">
-            <div className="col">
-              <div className="bg-orange text-start text-white fs-5 rounded p-2 mb-3 w-100">
-                Payment Method
+
+        {/* Payment Methods */}
+        <div className="payment-section-label">Payment Method</div>
+
+        {/* Bank Transfer */}
+        <div className="payment-method-block">
+          <button
+            className="payment-method-toggle"
+            onClick={() => setOpenBankTransfer(v => !v)}
+            aria-controls="bank-transfer-panel"
+            aria-expanded={openBankTransfer}
+          >
+            <img src={transfer1Img} alt="" aria-hidden="true" className="payment-method-icon" />
+            Bank Transfer
+            <span className="payment-method-chevron" aria-hidden="true">
+              {openBankTransfer ? '▲' : '▼'}
+            </span>
+          </button>
+          <Collapse in={openBankTransfer}>
+            <div id="bank-transfer-panel">
+              <div className="bank-panel">
+                <p className="bank-panel-instruction">
+                  Transfer exactly <strong>Rp 100,000</strong> to one of the accounts below, then upload your transfer screenshot.
+                </p>
+                <div className="bank-accounts-grid">
+                  {BANK_ACCOUNTS.map(({ img, name, number }) => (
+                    <div key={name} className="bank-account-card">
+                      <img src={img} alt={name} className="bank-logo" />
+                      <div className="bank-name">{name}</div>
+                      <div className="bank-number">{number}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          </Collapse>
+        </div>
 
-          <div className="row mb-2">
-            <div className="col">
-              <button
-                className="flex items-center btn btn-light w-100 fw-bold fs-5 text-start"
-                type="button"
-                onClick={() => setOpenPaymentList(!openPaymentList)}
-                aria-controls="payment-list-collapse"
-                aria-expanded={openPaymentList}
-              >
-                <img src={transfer1Img} alt="Transfer Bank" className="mr-2" />
-                Transfer Bank
-              </button>
-              <Collapse in={openPaymentList}>
-                <div id="payment-list-collapse">
-                  <div className="card bg-img-pill mt-2">
-                    <div className="card-body">
-                      <div className="flex flex-wrap justify-center">
-                        <Row className="text-center mx-24"> 
-                          <Col>
-                            <img
-                              src={bankBriImg}
-                              alt="BRI"
-                              className="img-bank mt-3"
-                            />
-                            <p className="bank-details">BRI - 07791768900</p>
-                          </Col>
-                          <Col>
-                            <img
-                              src={bankMandiriImg}
-                              alt="Mandiri"
-                              className="img-bank mt-4"
-                            />
-                            <p className="bank-details">Mandiri - 0881792022</p>
-                          </Col>
-                          <Col>
-                            <img
-                              src={bankBcaImg}
-                              alt="BCA"
-                              className="img-bank mt-4"
-                            />
-                            <p className="bank-details">BCA - 031789002</p>
-                          </Col>
-                        </Row>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Collapse>
-            </div>
-          </div>
-
-          <div className="row mb-2">
-            <div className="col">
-              <button
-                className="flex items-center btn btn-light w-100 fw-bold fs-5 text-start"
-                type="button"
-                onClick={() => setOpenQR(!openQR)}
-                aria-controls="qr-collapse"
-                aria-expanded={openQR}
-              >
-                <img src={wallet1Img} alt="E-Wallet" />
-                E-Wallet
-              </button>
-              <Collapse in={openQR}>
-                <div id="qr-collapse">
-                  <div className="card bg-img-pill">
-                    <div className="card-body text-center">
-                      <p>
-                        Scan the QR code below to make a payment using your
-                        preferred E-Wallet:
-                      </p>
-                      <img
-                        className="qr-code img-img-payment"
-                        src={qrCodeImg}
-                        alt="QR Code"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Collapse>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col">
-              <div className="bg-orange text-start text-white fs-5 rounded p-2 mb-3 w-100">
-                Total Payment
+        {/* E-Wallet */}
+        <div className="payment-method-block">
+          <button
+            className="payment-method-toggle"
+            onClick={() => setOpenQR(v => !v)}
+            aria-controls="ewallet-panel"
+            aria-expanded={openQR}
+          >
+            <img src={wallet1Img} alt="" aria-hidden="true" className="payment-method-icon" />
+            E-Wallet (QRIS)
+            <span className="payment-method-chevron" aria-hidden="true">
+              {openQR ? '▲' : '▼'}
+            </span>
+          </button>
+          <Collapse in={openQR}>
+            <div id="ewallet-panel">
+              <div className="bank-panel text-center">
+                <p className="bank-panel-instruction">
+                  Scan the QR code below with your preferred e-wallet app, then upload your payment screenshot.
+                </p>
+                <img className="qr-code" src={qrCodeImg} alt="QRIS payment QR code" />
               </div>
             </div>
-          </div>
-          <div className="row">
-            <div className="col">
-              <div className="col">Langganan Selamanya</div>
-            </div>
-            <div className="col-auto ms-auto">
-              <div>100.000-</div>
-            </div>
-          </div>
-          <hr />
-          <div className="row">
-            <div className="col">
-              <div className="col">Subtotal</div>
-            </div>
-            <div className="col-auto ms-auto">
-              <div>Rp100.000,00-</div>
-            </div>
-          </div>
+          </Collapse>
         </div>
-      </div>
 
-      <div className="button-container container-fluid custom-padding">
-        <div className="row">
-          <div className="col">
-            <button
-              className="bg-orange btn-bayar text-center text-white fs-5 rounded p-2 mb-3 w-100"
-              onClick={handleShowModalPayment}
-            >
-              Bayar
-            </button>
+        {/* Order Summary */}
+        <div className="payment-section-label" style={{ marginTop: '1.5rem' }}>Order Summary</div>
+        <div className="payment-summary">
+          <div className="payment-summary-row">
+            <span>Lifetime Subscription</span>
+            <span>Rp 100,000</span>
+          </div>
+          <div className="payment-summary-divider" />
+          <div className="payment-summary-row payment-summary-total">
+            <span>Total</span>
+            <span>Rp 100,000</span>
           </div>
         </div>
 
-        {/* Main Modal */}
-        <Modal show={showModal} onHide={handleCloseModalPayment} centered>
-          <Modal.Body className="text-center">
-            <label htmlFor="proofUpload" className="form-label">
-              Select Screenshot of Transfer:
-            </label>
-            <input
-              type="file"
-              className="form-control"
-              id="proofUpload"
-              onChange={handleProofUploadChange}
-            />
-            <div id="preview" style={{ marginTop: "20px" }}>
-              {previewImage && (
-                <img
-                  src={previewImage}
-                  alt="Preview"
-                  className="img-preview"
-                  style={{ maxWidth: "100px" }}
-                />
-              )}
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <button
-              className="bg-orange btn-bayar-submit text-center text-white fs-5 rounded p-2 w-100"
-              onClick={handleSubmitProof}
-              disabled={!imageFile || isSubmitting}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit Proof'}
-            </button>
-          </Modal.Footer>
-        </Modal>
-
-        {/* Submit Proof Modal */}
-        <Modal
-          show={showSubmitProofModal}
-          onHide={handleCloseSubmitProofModal}
-          centered
-          backdrop="static"
+        {/* Pay button */}
+        <button
+          className="btn-pay-now"
+          onClick={() => setShowUploadModal(true)}
+          disabled={isSubmitting}
+          aria-label="Upload payment proof"
         >
-          <Modal.Body className="text-center d-flex flex-column align-items-center justify-content-center">
-            <img src={loadingImg} alt="Loading..." width="200" />
-            <p className="mt-3">Validating...</p>
-          </Modal.Body>
-        </Modal>
+          Pay Now — Upload Proof
+        </button>
       </div>
+
+      {/* Upload Proof Modal */}
+      <Modal show={showUploadModal} onHide={resetModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title style={{ fontSize: '1rem', fontWeight: 700 }}>Upload Payment Proof</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p style={{ fontSize: '0.875rem', color: '#555', marginBottom: '1rem' }}>
+            Upload a clear screenshot or photo of your transfer confirmation. Accepted formats: JPG, PNG, WEBP (max 5 MB).
+          </p>
+          <label htmlFor="proofUpload" className="proof-upload-label">
+            {previewImage ? 'Change screenshot' : 'Select screenshot'}
+          </label>
+          <input
+            type="file"
+            id="proofUpload"
+            accept="image/*"
+            className="proof-upload-input"
+            onChange={handleProofUploadChange}
+          />
+          {previewImage && (
+            <div className="proof-preview-wrapper">
+              <img src={previewImage} alt="Payment proof preview" className="proof-preview-img" />
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer style={{ flexDirection: 'column', gap: '0.5rem' }}>
+          <button
+            className="btn-submit-proof"
+            onClick={handleSubmitProof}
+            disabled={!imageFile || isSubmitting}
+          >
+            {isSubmitting ? 'Submitting…' : 'Submit Proof'}
+          </button>
+          <button className="btn-cancel-proof" onClick={resetModal}>
+            Cancel
+          </button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Processing Modal */}
+      <Modal show={showProcessingModal} centered backdrop="static" keyboard={false}>
+        <Modal.Body className="text-center processing-modal-body">
+          <img src={loadingImg} alt="" aria-hidden="true" width="160" />
+          <p className="processing-text">Processing your payment…</p>
+          <p style={{ fontSize: '0.8rem', color: '#999' }}>You will be redirected shortly.</p>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

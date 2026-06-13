@@ -1,202 +1,187 @@
-@import url('https://fonts.googleapis.com/css?family=Inter:400');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
+/* ── Page wrapper ── */
 .login-page,
 .register-page {
-    background-color: #ffa458bf;
-    font-family: "Inter-Regular", Helvetica;
+    font-family: 'Inter', Helvetica, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    min-height: 100vh;
+    background-color: rgba(255, 164, 88, 0.75);
+    padding: 24px 16px;
 }
 
+/* ── Card — two-column: illustration left, form right ── */
 .card-container {
-    background-color: white;
-    background-image: url('https://c.animaapp.com/ME8XcaOo/img/2111-w039-n003-6b-p1-1.png');
-    background-size: cover;
-    width: 1200px;
-    height: 600px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 25px;
-    margin: auto;
-}
-
-.element-removebg {
-    width: 45%;
-    height: 55%;
-    margin-top: 200px;
-    margin-left: 50px;
-    object-fit: cover;
-    transform: translate(0, -30%);
-}
-
-.low-fi-block-header {
-    opacity: 0;
-    animation: fadeIn 1s ease forwards;
-    animation-delay: 0.6s;
-    width: 600px;
-    height: 109px;
-    justify-content: center;
-    padding: 20px;
+    background-color: #fff;
+    width: 100%;
+    max-width: 900px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    overflow: hidden;
+    min-height: 480px;
+}
+
+/* Illustration panel */
+.element-removebg {
+    display: block;
+    width: 42%;
+    flex-shrink: 0;
+    object-fit: contain;
+    background: linear-gradient(160deg, rgba(255, 164, 88, 0.18) 0%, rgba(255, 164, 88, 0.05) 100%);
+    padding: 32px 20px;
+}
+
+/* ── Form panel ── */
+.low-fi-block-header {
+    flex: 1;
+    display: flex;
     align-items: center;
-    position: absolute;
-    top: 40%;
-    right: 10%;
+    padding: 48px 40px;
+    opacity: 0;
+    animation: fadeIn 0.6s ease forwards;
+    animation-delay: 0.2s;
 }
 
 .low-fi-block-header .div {
-    align-self: stretch;
     width: 100%;
-    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    position: relative;
+    align-items: stretch;
 }
 
-.low-fi-block-header .text-wrapper {
-    position: relative;
-    width: fit-content;
-    margin-top: -1px;
+/* ── Headings ── */
+.text-wrapper {
     font-weight: 700;
-    color: #000000;
-    font-size: 20px;
-    letter-spacing: 0;
-    line-height: normal;
-    white-space: nowrap;
+    color: #1a1a1a;
+    font-size: 1.35rem;
+    margin-bottom: 6px;
+    text-align: center;
 }
 
-.low-fi-block-header .p-register {
-    position: relative;
-    width: fit-content;
+.p-login,
+.p-register {
     font-weight: 400;
-    color: #000000;
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: normal;
+    color: #666;
+    font-size: 0.875rem;
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.5;
 }
 
-.p-login {
-    position: relative;
-    width: fit-content;
-    font-weight: 400;
-    color: #000000;
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: 1cm;
-}
-
+/* ── Form fields ── */
 .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .form-group label {
-    font-family: "Inter-Regular", Helvetica;
-    font-weight: 500;
-    color: #000000;
-    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.875rem;
     margin-bottom: 6px;
 }
 
 .box {
     display: flex;
-    align-items: flex-start;
-    position: relative;
-    background-color: #e5e8eb;
-    border-radius: 12px;
+    align-items: center;
+    background-color: #f0f2f5;
+    border: 1.5px solid transparent;
+    border-radius: 10px;
     overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.box:focus-within {
+    border-color: #FFA458;
+    box-shadow: 0 0 0 3px rgba(255, 164, 88, 0.18);
+    background-color: #fff;
 }
 
 .box .search {
     display: flex;
-    height: 30px;
-    width: 400px;
     align-items: center;
-    gap: 16px;
-    padding: 8px 18px;
-    position: relative;
-    flex: 1;
-    flex-grow: 1;
+    width: 100%;
+    padding: 0 14px;
 }
 
 .box .text-container {
-    position: relative;
-    flex-grow: 1;
+    width: 100%;
+    height: 44px;
     border: none;
     background: none;
-    width: 100%;
-    height: 100%;
-    margin-top: -1px;
-    font-family: "Inter-Regular", Helvetica;
-    font-weight: 400;
-    color: black;
-    font-size: 12px;
-    letter-spacing: 0;
-    line-height: normal;
-    padding: 0;
-}
-
-.box .text-container:focus {
-    border: none;
+    font-family: 'Inter', Helvetica, sans-serif;
+    font-size: 0.9rem;
+    color: #1a1a1a;
     outline: none;
 }
 
-.login-button {
-    width: 73%;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    background-color: #FFA458;
-    color: white;
-    font-family: "Inter-Regular", Helvetica;
-    font-weight: 400;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px;
+.box .text-container::placeholder {
+    color: #aaa;
 }
 
+/* ── Submit / login button ── */
+.login-button,
 .submit-button {
     width: 100%;
-    padding: 12px;
+    padding: 13px;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     background-color: #FFA458;
     color: white;
-    font-family: "Inter-Regular", Helvetica;
-    font-weight: 400;
-    font-size: 16px;
+    font-family: 'Inter', Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
     margin-top: 20px;
+    transition: background-color 0.2s, transform 0.1s;
 }
 
-.submit-button:hover, .login-button:hover  {
-    background-color: #ff8533;
+.login-button:hover,
+.submit-button:hover {
+    background-color: #ef7919;
 }
 
-.submit-button:focus-visible, .login-button:focus-visible {
+.login-button:active,
+.submit-button:active {
+    transform: scale(0.99);
+}
+
+.login-button:disabled,
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.login-button:focus-visible,
+.submit-button:focus-visible {
     outline: 3px solid #FFA458;
     outline-offset: 2px;
 }
 
-.have-account-link, .dont-have-account-link {
+/* ── Switch auth link ── */
+.have-account-link,
+.dont-have-account-link {
     font-weight: 500;
     display: block;
-    font-size: 12px;
-    color: #000000;
+    font-size: 0.8rem;
+    color: #555;
     text-decoration: none;
-    margin-top: 10px;
-    margin-left: 280px;
+    margin-top: 14px;
+    text-align: center;
+    transition: color 0.2s;
 }
 
-.have-account-link:hover, .dont-have-account-link:hover {
-    color: #ff8533;
+.have-account-link:hover,
+.dont-have-account-link:hover {
+    color: #ef7919;
 }
 
+/* ── SweetAlert2 toast variants ── */
 .colored-toast.swal2-icon-success {
     background-color: #a5dc86 !important;
 }
@@ -205,87 +190,64 @@
     background-color: #f27474 !important;
 }
 
-.colored-toast .swal2-title {
-    color: white;
-}
-
-.colored-toast .swal2-close {
-    color: white;
-}
-
+.colored-toast .swal2-title,
+.colored-toast .swal2-close,
 .colored-toast .swal2-html-container {
     color: white;
 }
 
-
-@media (max-width: 768px) {
-    body {
-        background-color: rgba(0, 0, 0, 0);
-        background-image: url('https://c.animaapp.com/yGkobJtl/img/bg.png');
-        justify-content: center;
-        align-items: center;
-    }
-
-    .login-lol{
-        margin-right: 200px;
-    }
-
-    .card-container {
-        width: 100%;
-        height: 100%;
-        border-radius: 0;
-    }
-
-    .element-removebg {
-        display: none;
-    }
-
-    .low-fi-block-header {
-        width: 100%;
-        top: 30%;
-        right: 0;
-    }
-
-    .low-fi-block-header .div {
-        align-items: center;
-        width: 100%;
-        margin-left: 10px;
-    }
-
-    .low-fi-block-header .text-wrapper {
-        font-size: 18px;
-    }
-
-    .p-login {
-        font-size: 12px;
-        text-align: center;
-    }
-
-    .form-group label {
-        font-size: 12px;
-    }
-
-    .box .search {
-        width: 100%;
-    }
-
-    .submit-button, .login-button {
-        width: 100%;
-    }
-
-    .have-account-link, .dont-have-account-link {
-        margin: 10px 0 0 0;
-        text-align: center;
-    }
-}
-
+/* ── Animation ── */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(-12px);
     }
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* ── Tablet: stack vertically, keep image ── */
+@media (max-width: 640px) {
+    .card-container {
+        flex-direction: column;
+        max-width: 440px;
+    }
+
+    .element-removebg {
+        width: 100%;
+        max-height: 180px;
+        padding: 20px;
+    }
+
+    .low-fi-block-header {
+        padding: 32px 28px 36px;
+    }
+}
+
+/* ── Mobile: full-screen form only ── */
+@media (max-width: 480px) {
+    .login-page,
+    .register-page {
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .card-container {
+        flex-direction: column;
+        max-width: 100%;
+        border-radius: 0;
+        min-height: 100vh;
+    }
+
+    .element-removebg {
+        max-height: 160px;
+        padding: 16px;
+    }
+
+    .low-fi-block-header {
+        padding: 28px 24px 36px;
+        flex: 1;
     }
 }
