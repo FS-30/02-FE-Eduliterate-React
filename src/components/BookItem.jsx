@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function BookItem({ books, isSubscribed }) {
   const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem('token');
 
   return (
     <section className="product" id="product" aria-label="Digital Collection">
@@ -40,9 +41,11 @@ export default function BookItem({ books, isSubscribed }) {
                   <button
                     className="btn btn-books btn-subscribe"
                     onClick={() => navigate('/payment')}
-                    aria-label={`Subscribe to read ${book.title}`}
+                    disabled={!isLoggedIn}
+                    title={!isLoggedIn ? 'Please log in or register first' : undefined}
+                    aria-label={!isLoggedIn ? 'Log in to subscribe' : `Subscribe to read ${book.title}`}
                   >
-                    Subscribe to Read
+                    {!isLoggedIn ? 'Log in to Subscribe' : 'Subscribe to Read'}
                   </button>
                 </div>
               );

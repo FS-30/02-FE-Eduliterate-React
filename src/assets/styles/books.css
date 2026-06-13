@@ -279,10 +279,15 @@
     font-size: 0.875rem;
 }
 
-.btn-subscribe:hover {
+.btn-subscribe:hover:not(:disabled) {
     background-color: var(--color-primary) !important;
     color: #fff !important;
     border-color: var(--color-primary) !important;
+}
+
+.btn-subscribe:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 
 .audiobook-icon {
